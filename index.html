@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Food Ordering System</title>
+    <title>QR Food Ordering System - Menu</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tone.js for sound notifications -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,12 +14,11 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Simple animation for new orders */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .new-order-animation {
+        .fade-in-animation {
             animation: fadeIn 0.5s ease-out;
         }
     </style>
@@ -30,13 +27,6 @@
 
     <!-- Main container -->
     <div id="app-container" class="container mx-auto p-4 max-w-7xl">
-
-        <!-- View Toggler (Modified for dashboard access) -->
-        <div id="view-toggler" class="fixed top-4 right-4 z-50">
-             <button onclick="goToDashboard()" class="bg-white shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-all">
-                Go to Dashboard
-            </button>
-        </div>
 
         <!-- Customer View -->
         <div id="customer-view">
@@ -49,55 +39,44 @@
                 <!-- Menu Items -->
                 <div id="menu-items" class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Menu items will be dynamically inserted here -->
+                     <p id="menu-loading-msg" class="col-span-full text-center text-gray-500">Loading menu...</p>
                 </div>
 
-                <!-- Order Cart -->
+                <!-- Order Cart / Status View -->
                 <div class="md:col-span-5">
                     <div class="bg-white rounded-xl shadow-lg p-6 sticky top-8">
-                        <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">Your Order</h2>
-                        <div class="mb-4">
-                            <label for="customer-name" class="block text-sm font-medium text-gray-700">Your Name</label>
-                            <input type="text" id="customer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., Jane Doe">
-                        </div>
-                        <div id="cart-items" class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
-                            <!-- Cart items will be dynamically inserted here -->
-                             <p id="cart-empty-msg" class="text-gray-500 text-center py-8">Your cart is empty.</p>
-                        </div>
-                        <div class="mt-6 border-t pt-4">
-                            <div class="flex justify-between items-center text-lg font-bold">
-                                <span>Total:</span>
-                                <span id="cart-total">฿0.00</span>
+                        <!-- Order Cart View -->
+                        <div id="cart-view">
+                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">Your Order</h2>
+                            <div class="mb-4">
+                                <label for="customer-name" class="block text-sm font-medium text-gray-700">Your Name</label>
+                                <input type="text" id="customer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., Jane Doe">
                             </div>
-                            <button id="place-order-btn" onclick="placeOrder()" class="w-full bg-indigo-600 text-white rounded-lg py-3 mt-4 font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
-                                Place Order
+                            <div id="cart-items" class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
+                                 <p id="cart-empty-msg" class="text-gray-500 text-center py-8">Your cart is empty.</p>
+                            </div>
+                            <div class="mt-6 border-t pt-4">
+                                <div class="flex justify-between items-center text-lg font-bold">
+                                    <span>Total:</span>
+                                    <span id="cart-total">฿0.00</span>
+                                </div>
+                                <button id="place-order-btn" onclick="placeOrder()" class="w-full bg-indigo-600 text-white rounded-lg py-3 mt-4 font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+                                    Place Order
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Order Status View -->
+                        <div id="status-view" class="hidden text-center fade-in-animation">
+                             <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">My Order Status</h2>
+                             <div id="status-content" class="py-8">
+                                <p class="text-lg font-medium text-gray-700">Status for <span id="status-customer-name" class="font-bold"></span></p>
+                                <p id="order-status-text" class="text-3xl font-bold mt-2"></p>
+                             </div>
+                             <button id="new-order-btn" onclick="startNewOrder()" class="hidden w-full bg-green-600 text-white rounded-lg py-3 font-semibold hover:bg-green-700 transition-colors">
+                                Place a New Order
                             </button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Combined Kitchen/Cashier Dashboard View -->
-        <div id="dashboard-view" class="hidden">
-            <header class="flex justify-between items-center mb-8">
-                <div class="text-center flex-grow">
-                    <h1 class="text-4xl font-bold text-gray-800">Order Dashboard</h1>
-                    <p class="text-gray-500">Manage active orders and payments</p>
-                </div>
-                <button onclick="goToMenu()" class="bg-white shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-all">
-                    Go to Menu
-                </button>
-            </header>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Active Orders Column -->
-                <div>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-700">Active Orders</h2>
-                    <div id="active-orders" class="space-y-4"></div>
-                </div>
-                <!-- Ready for Payment Column -->
-                <div>
-                    <h2 class="text-2xl font-bold mb-4 text-gray-700">Ready for Payment</h2>
-                    <div id="payment-due-orders" class="space-y-4"></div>
                 </div>
             </div>
         </div>
@@ -116,45 +95,45 @@
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, query, where, onSnapshot, doc, updateDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONFIGURATION ---
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'qr-food-order-default';
+        const firebaseConfig = {
+          apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
+          authDomain: "akari-qr-order-system.firebaseapp.com",
+          projectId: "akari-qr-order-system",
+          storageBucket: "akari-qr-order-system.appspot.com",
+          messagingSenderId: "646414842831",
+          appId: "1:646414842831:web:0b76fc2779b7afc26030ba",
+          measurementId: "G-VWBWZ2NHK9"
+        };
         
-        // --- MENU DATA ---
-        const menu = [
-            { id: 'pad-thai', name: 'Pad Thai', price: 120, image: 'https://placehold.co/400x300/a78bfa/ffffff?text=Pad+Thai' },
-            { id: 'green-curry', name: 'Green Curry', price: 150, image: 'https://placehold.co/400x300/34d399/ffffff?text=Green+Curry' },
-            { id: 'tom-yum', name: 'Tom Yum Goong', price: 180, image: 'https://placehold.co/400x300/f87171/ffffff?text=Tom+Yum' },
-            { id: 'mango-sticky-rice', name: 'Mango Sticky Rice', price: 90, image: 'https://placehold.co/400x300/fbbf24/ffffff?text=Mango+Sticky+Rice' },
-            { id: 'spring-rolls', name: 'Spring Rolls', price: 80, image: 'https://placehold.co/400x300/fb923c/ffffff?text=Spring+Rolls' },
-            { id: 'satay-chicken', name: 'Chicken Satay', price: 110, image: 'https://placehold.co/400x300/facc15/ffffff?text=Chicken+Satay' },
-            { id: 'massaman-curry', name: 'Massaman Curry', price: 160, image: 'https://placehold.co/400x300/60a5fa/ffffff?text=Massaman+Curry' },
-            { id: 'pad-see-ew', name: 'Pad See Ew', price: 130, image: 'https://placehold.co/400x300/c084fc/ffffff?text=Pad+See+Ew' },
-            { id: 'thai-iced-tea', name: 'Thai Iced Tea', price: 50, image: 'https://placehold.co/400x300/f97316/ffffff?text=Thai+Iced+Tea' },
+        // --- Hardcoded Default Menu ---
+        const defaultMenu = [
+            { id: 'pad-thai-default', name: 'Pad Thai', price: 120, image: 'https://placehold.co/400x300/a78bfa/ffffff?text=Pad+Thai' },
+            { id: 'green-curry-default', name: 'Green Curry', price: 150, image: 'https://placehold.co/400x300/34d399/ffffff?text=Green+Curry' },
+            { id: 'tom-yum-default', name: 'Tom Yum Goong', price: 180, image: 'https://placehold.co/400x300/f87171/ffffff?text=Tom+Yum' },
         ];
 
         // --- STATE ---
+        let menu = []; 
         let cart = [];
+        let activeOrderListener = null; // To hold the unsubscribe function for the order listener
 
         // --- FIREBASE INITIALIZATION ---
-        let app, auth, db, ordersCollectionRef;
+        let app, auth, db, ordersCollectionRef, menuCollectionRef;
         try {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
             setLogLevel('debug'); 
 
-            const collectionPath = `artifacts/${appId}/public/data/orders`;
-            ordersCollectionRef = collection(db, collectionPath);
+            ordersCollectionRef = collection(db, "orders");
+            menuCollectionRef = collection(db, "menu");
             
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
+            await signInAnonymously(auth);
+
         } catch (error) {
             console.error("Firebase initialization failed:", error);
             showModal("Could not connect to the ordering service. Please try again later.");
@@ -166,24 +145,48 @@
         const cartTotalEl = document.getElementById('cart-total');
         const placeOrderBtn = document.getElementById('place-order-btn');
         const cartEmptyMsg = document.getElementById('cart-empty-msg');
-        const customerView = document.getElementById('customer-view');
-        const dashboardView = document.getElementById('dashboard-view');
-        const viewToggler = document.getElementById('view-toggler');
-        const activeOrdersContainer = document.getElementById('active-orders');
-        const paymentDueOrdersContainer = document.getElementById('payment-due-orders');
+        const menuLoadingMsg = document.getElementById('menu-loading-msg');
+        const cartView = document.getElementById('cart-view');
+        const statusView = document.getElementById('status-view');
+        const statusCustomerName = document.getElementById('status-customer-name');
+        const orderStatusText = document.getElementById('order-status-text');
+        const newOrderBtn = document.getElementById('new-order-btn');
 
-        // --- CORE FUNCTIONS ---
+        // --- MENU FUNCTIONS ---
+        function listenForMenu() {
+            onSnapshot(menuCollectionRef, (snapshot) => {
+                const menuMap = new Map();
+                defaultMenu.forEach(item => menuMap.set(item.id, item));
+                snapshot.docs.forEach(doc => {
+                    menuMap.set(doc.id, { id: doc.id, ...doc.data() });
+                });
+                menu = Array.from(menuMap.values());
+                renderMenu();
+            }, (error) => {
+                console.error("Error listening to menu:", error);
+                menu = [...defaultMenu];
+                renderMenu();
+                if(menuLoadingMsg) menuLoadingMsg.textContent = "Could not load extra items. Showing default menu.";
+            });
+        }
+
         function renderMenu() {
             if (!menuItemsContainer) return;
             menuItemsContainer.innerHTML = '';
+            
+            if (menu.length === 0) {
+                if(menuLoadingMsg) menuLoadingMsg.textContent = "Menu is currently empty.";
+                return;
+            }
+
             menu.forEach(item => {
                 const itemEl = document.createElement('div');
                 itemEl.className = 'bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300';
                 itemEl.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/ffffff?text=Image+Not+Found';">
                     <div class="p-4">
                         <h3 class="font-bold text-lg">${item.name}</h3>
-                        <p class="text-gray-600">฿${item.price.toFixed(2)}</p>
+                        <p class="text-gray-600">฿${Number(item.price).toFixed(2)}</p>
                         <button onclick="addToCart('${item.id}')" class="mt-3 w-full bg-indigo-100 text-indigo-700 font-semibold py-2 rounded-lg hover:bg-indigo-200 transition-colors">
                             Add to Order
                         </button>
@@ -194,16 +197,19 @@
         }
 
         window.addToCart = (itemId) => {
+            const menuItem = menu.find(item => item.id === itemId);
+            if (!menuItem) return;
+
             const existingItem = cart.find(item => item.id === itemId);
             if (existingItem) {
                 existingItem.quantity++;
             } else {
-                const menuItem = menu.find(item => item.id === itemId);
                 cart.push({ ...menuItem, quantity: 1 });
             }
             renderCart();
         };
 
+        // --- CART FUNCTIONS ---
         window.adjustQuantity = (itemId, change) => {
             const cartItem = cart.find(item => item.id === itemId);
             if (cartItem) {
@@ -217,31 +223,27 @@
 
         function renderCart() {
             if (!cartItemsContainer) return;
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = '';
-                cartEmptyMsg.classList.remove('hidden');
-            } else {
-                cartEmptyMsg.classList.add('hidden');
-                cartItemsContainer.innerHTML = '';
-                cart.forEach(item => {
-                    const cartItemEl = document.createElement('div');
-                    cartItemEl.className = 'flex justify-between items-center py-3';
-                    cartItemEl.innerHTML = `
-                        <div>
-                            <p class="font-semibold">${item.name}</p>
-                            <p class="text-sm text-gray-500">฿${item.price.toFixed(2)}</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="adjustQuantity('${item.id}', -1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="adjustQuantity('${item.id}', 1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">+</button>
-                        </div>
-                    `;
-                    cartItemsContainer.appendChild(cartItemEl);
-                });
-            }
+            cartEmptyMsg.classList.toggle('hidden', cart.length > 0);
+            cartItemsContainer.innerHTML = '';
+            
+            cart.forEach(item => {
+                const cartItemEl = document.createElement('div');
+                cartItemEl.className = 'flex justify-between items-center py-3';
+                cartItemEl.innerHTML = `
+                    <div>
+                        <p class="font-semibold">${item.name}</p>
+                        <p class="text-sm text-gray-500">฿${Number(item.price).toFixed(2)}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="adjustQuantity('${item.id}', -1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="adjustQuantity('${item.id}', 1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">+</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItemEl);
+            });
 
-            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const total = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
             cartTotalEl.textContent = `฿${total.toFixed(2)}`;
             placeOrderBtn.disabled = cart.length === 0;
         }
@@ -263,167 +265,110 @@
 
             const order = {
                 customerName: customerName,
-                items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: item.price })),
-                totalPrice: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-                status: 'Pending', // Statuses: Pending, Preparing, Ready, Completed
+                items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: Number(item.price) })),
+                totalPrice: cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0),
+                status: 'Pending',
                 createdAt: serverTimestamp()
             };
 
             try {
-                await addDoc(ordersCollectionRef, order);
-                showModal("Order placed successfully! The kitchen has received it.");
+                const docRef = await addDoc(ordersCollectionRef, order);
+                showModal("Order placed successfully!");
                 cart = [];
                 nameInput.value = '';
                 renderCart();
+                sessionStorage.setItem('activeOrderId', docRef.id); // Save order ID
+                listenForOrderStatus(docRef.id); // Start listening to this order's status
             } catch (error) {
                 console.error("Error placing order: ", error);
-                showModal("There was an error placing your order. Please try again.");
+                showModal("There was an error placing your order.");
             } finally {
                 placeOrderBtn.disabled = false;
                 placeOrderBtn.textContent = 'Place Order';
             }
         };
 
-        // --- DASHBOARD VIEW FUNCTIONS ---
-        const statusConfig = {
-            'Pending': { color: 'bg-red-500', nextAction: 'Start Cooking', nextStatus: 'Preparing' },
-            'Preparing': { color: 'bg-yellow-500', nextAction: 'Mark as Ready', nextStatus: 'Ready' },
-            'Ready': { color: 'bg-green-500', nextAction: 'Mark as Paid', nextStatus: 'Completed' }
-        };
-
-        function listenForOrders() {
-            const q = query(ordersCollectionRef, where("status", "in", ["Pending", "Preparing", "Ready"]));
-
-            onSnapshot(q, (snapshot) => {
-                if (!activeOrdersContainer || !paymentDueOrdersContainer) return;
-                activeOrdersContainer.innerHTML = '';
-                paymentDueOrdersContainer.innerHTML = '';
-
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === "added" && change.doc.data().status === 'Pending') {
-                        try {
-                            const synth = new Tone.Synth().toDestination();
-                            synth.triggerAttackRelease("C4", "8n");
-                        } catch(e) { console.error("Could not play sound", e); }
-                    }
-                });
-
-                snapshot.docs.forEach(doc => {
-                    const order = { id: doc.id, ...doc.data() };
-                    renderOrderCard(order);
-                });
-
-            }, (error) => {
-                console.error("Error listening to orders:", error);
-                showModal("Connection to dashboard lost. Please refresh.");
+        // --- ORDER STATUS FUNCTIONS ---
+        function listenForOrderStatus(orderId) {
+            if (activeOrderListener) {
+                activeOrderListener(); // Unsubscribe from any previous listener
+            }
+            const orderRef = doc(db, "orders", orderId);
+            activeOrderListener = onSnapshot(orderRef, (doc) => {
+                if (doc.exists()) {
+                    const orderData = doc.data();
+                    updateStatusView(orderData);
+                } else {
+                    // Order was likely completed and removed from the active query
+                    clearActiveOrder();
+                }
             });
         }
-        
-        function renderOrderCard(order) {
-            const config = statusConfig[order.status];
-            if (!config) return;
 
-            const card = document.createElement('div');
-            card.id = `order-${order.id}`;
-            card.className = 'bg-white rounded-lg shadow-md p-4 new-order-animation';
+        function updateStatusView(orderData) {
+            cartView.classList.add('hidden');
+            statusView.classList.remove('hidden');
+
+            statusCustomerName.textContent = orderData.customerName;
             
-            const itemsHtml = order.items.map(item => `
-                <li class="flex justify-between text-sm">
-                    <span>${item.quantity} x ${item.name}</span>
-                    <span class="text-gray-500">฿${(item.quantity * item.price).toFixed(2)}</span>
-                </li>
-            `).join('');
+            const status = orderData.status;
+            let statusDisplay = { text: status, color: 'text-gray-700' };
 
-            const orderTime = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleTimeString() : 'N/A';
+            if (status === 'Pending') {
+                statusDisplay = { text: 'Pending', color: 'text-red-500' };
+            } else if (status === 'Preparing') {
+                statusDisplay = { text: 'Preparing your food...', color: 'text-yellow-500' };
+            } else if (status === 'Ready') {
+                statusDisplay = { text: 'Ready for pickup!', color: 'text-green-500' };
+            } else if (status === 'Completed') {
+                statusDisplay = { text: 'Order complete! Thank you!', color: 'text-blue-500' };
+            }
             
-            let statusIndicator = `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full ${config.color} text-white">${order.status}</span>`;
-            if (order.status === 'Ready') {
-                statusIndicator = `<div class="font-bold text-lg text-green-600">Total: ฿${order.totalPrice.toFixed(2)}</div>`;
-            }
+            orderStatusText.textContent = statusDisplay.text;
+            orderStatusText.className = `text-3xl font-bold mt-2 ${statusDisplay.color}`;
 
-            card.innerHTML = `
-                <div class="flex justify-between items-start border-b pb-2 mb-2">
-                    <div>
-                        <h3 class="font-bold text-lg">Name: ${order.customerName}</h3>
-                        <p class="text-sm text-gray-500">Time: ${orderTime}</p>
-                    </div>
-                    <div>${statusIndicator}</div>
-                </div>
-                <ul class="space-y-1 mb-4">${itemsHtml}</ul>
-                <button onclick="updateOrderStatus('${order.id}', '${config.nextStatus}')" class="w-full ${config.color} text-white font-semibold py-2 rounded-lg hover:opacity-90 transition-opacity">
-                    ${config.nextAction}
-                </button>
-            `;
-
-            if (order.status === 'Pending' || order.status === 'Preparing') {
-                activeOrdersContainer.appendChild(card);
-            } else if (order.status === 'Ready') {
-                paymentDueOrdersContainer.appendChild(card);
-            }
-        }
-
-        window.updateOrderStatus = async (orderId, newStatus) => {
-            const orderRef = doc(db, `artifacts/${appId}/public/data/orders`, orderId);
-            try {
-                await updateDoc(orderRef, { status: newStatus });
-            } catch (error) {
-                console.error("Error updating order status:", error);
-                showModal("Failed to update order. Please check your connection.");
-            }
-        };
-
-        // --- UI & VIEW MANAGEMENT ---
-        window.goToDashboard = () => {
-            // FIX: Construct a full URL to avoid errors in sandboxed environments.
-            const newUrl = new URL(window.location.href);
-            newUrl.searchParams.set('view', 'dashboard');
-            window.location.href = newUrl.href;
-        }
-        
-        window.goToMenu = () => {
-            // FIX: Construct a full URL, removing the view parameter.
-            const newUrl = new URL(window.location.href);
-            newUrl.searchParams.delete('view');
-            window.location.href = newUrl.href;
-        }
-
-        function switchView(view) {
-             if (view === 'dashboard') {
-                customerView.classList.add('hidden');
-                viewToggler.classList.add('hidden'); // Hide button on dashboard
-                dashboardView.classList.remove('hidden');
-                document.body.classList.add('bg-gray-200');
-                document.body.classList.remove('bg-gray-100');
-                listenForOrders();
+            // Show "New Order" button only when order is finished
+            if (status === 'Completed') {
+                newOrderBtn.classList.remove('hidden');
+                if(activeOrderListener) activeOrderListener(); // Stop listening
             } else {
-                dashboardView.classList.add('hidden');
-                customerView.classList.remove('hidden');
-                viewToggler.classList.remove('hidden');
-                document.body.classList.add('bg-gray-100');
-                document.body.classList.remove('bg-gray-200');
-                renderMenu();
-                renderCart();
+                newOrderBtn.classList.add('hidden');
             }
         }
-        
-        function showModal(message) {
-            document.getElementById('modal-message').textContent = message;
-            document.getElementById('message-modal').classList.remove('hidden');
+
+        window.startNewOrder = () => {
+            clearActiveOrder();
         }
 
-        window.closeModal = () => {
-            document.getElementById('message-modal').classList.add('hidden');
+        function clearActiveOrder() {
+            sessionStorage.removeItem('activeOrderId');
+            if (activeOrderListener) {
+                activeOrderListener(); // Stop listening to the old order
+                activeOrderListener = null;
+            }
+            statusView.classList.add('hidden');
+            cartView.classList.remove('hidden');
         }
+        
+        window.showModal = (message) => { document.getElementById('modal-message').textContent = message; document.getElementById('message-modal').classList.remove('hidden'); }
+        window.closeModal = () => { document.getElementById('message-modal').classList.add('hidden'); }
 
         // --- INITIALIZATION ---
         function init() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const view = urlParams.get('view') === 'dashboard' ? 'dashboard' : 'customer';
-            switchView(view);
+            // Always load the menu on initialization.
+            listenForMenu();
+
+            const activeOrderId = sessionStorage.getItem('activeOrderId');
+            if (activeOrderId) {
+                // If there's an active order, listen to its status.
+                listenForOrderStatus(activeOrderId);
+            } else {
+                // Otherwise, just render the empty cart.
+                renderCart();
+            }
         }
 
         init();
-
     </script>
 </body>
 </html>
