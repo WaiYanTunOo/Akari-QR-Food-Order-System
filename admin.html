@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tone.js for sound notifications -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <!-- Google Fonts: Noto Sans Myanmar -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +13,6 @@
         body {
             font-family: 'Noto Sans Myanmar', sans-serif;
         }
-        /* Simple animation for new orders */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -28,10 +24,8 @@
 </head>
 <body class="bg-gray-200 antialiased">
 
-    <!-- Main container -->
     <div id="app-container" class="container mx-auto p-4 max-w-7xl">
 
-        <!-- Login View -->
         <div id="login-view" class="max-w-md mx-auto mt-20">
              <div class="bg-white rounded-xl shadow-lg p-8">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Admin Login</h2>
@@ -53,9 +47,7 @@
              </div>
         </div>
 
-        <!-- Main App View (Dashboard and Admin Panel) -->
         <div id="main-app" class="hidden">
-            <!-- Dashboard View -->
             <div id="dashboard-view">
                 <header class="flex justify-between items-center mb-8">
                     <div class="text-center flex-grow">
@@ -69,12 +61,10 @@
                     </div>
                 </header>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Active Orders Column -->
                     <div>
                         <h2 class="text-2xl font-bold mb-4 text-gray-700">Active Orders</h2>
                         <div id="active-orders" class="space-y-4"></div>
                     </div>
-                    <!-- Ready for Payment Column -->
                     <div>
                         <h2 class="text-2xl font-bold mb-4 text-gray-700">Ready for Payment</h2>
                         <div id="payment-due-orders" class="space-y-4"></div>
@@ -82,7 +72,6 @@
                 </div>
             </div>
 
-            <!-- Admin View -->
             <div id="admin-view" class="hidden">
                 <header class="flex justify-between items-center mb-8">
                     <div class="text-center flex-grow">
@@ -115,7 +104,6 @@
             </div>
         </div>
         
-        <!-- Modal for messages -->
         <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center">
                 <p id="modal-message" class="text-lg mb-6"></p>
@@ -125,7 +113,6 @@
 
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -171,12 +158,10 @@
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in, show the main application
                 loginView.classList.add('hidden');
                 mainApp.classList.remove('hidden');
-                initApp(); // Initialize listeners only after login
+                initApp();
             } else {
-                // User is signed out, show the login form
                 mainApp.classList.add('hidden');
                 loginView.classList.remove('hidden');
             }
@@ -188,7 +173,6 @@
             const password = document.getElementById('password').value;
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle showing the app
             } catch (error) {
                 console.error("Login failed:", error);
                 showModal("Login failed. Please check your email and password.");
@@ -198,7 +182,6 @@
         window.logout = async () => {
             try {
                 await signOut(auth);
-                // onAuthStateChanged will handle showing the login screen
             } catch (error) {
                 console.error("Sign out failed:", error);
             }
@@ -246,9 +229,20 @@
             const orderTime = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleTimeString() : 'N/A';
             let statusIndicator = order.status === 'Ready' ? `<div class="font-bold text-lg text-green-600">Total: ฿${order.totalPrice.toFixed(2)}</div>` : `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full ${config.color} text-white">${order.status}</span>`;
 
+            let contactInfoHtml = `<p class="text-sm text-gray-500">Time: ${orderTime}</p>`;
+            if (order.customerPhone) {
+                contactInfoHtml += `<p class="text-sm text-gray-500">Phone: ${order.customerPhone}</p>`;
+            }
+            if (order.customerAddress) {
+                contactInfoHtml += `<p class="text-sm text-gray-500">Address: ${order.customerAddress}</p>`;
+            }
+
             card.innerHTML = `
                 <div class="flex justify-between items-start border-b pb-2 mb-2">
-                    <div><h3 class="font-bold text-lg">Name: ${order.customerName}</h3><p class="text-sm text-gray-500">Time: ${orderTime}</p></div>
+                    <div>
+                        <h3 class="font-bold text-lg">Name: ${order.customerName}</h3>
+                        ${contactInfoHtml}
+                    </div>
                     <div>${statusIndicator}</div>
                 </div>
                 <ul class="space-y-1 mb-4">${itemsHtml}</ul>
@@ -277,7 +271,6 @@
                     return;
                 }
                 
-                // Batch delete all completed documents
                 for (const docSnapshot of querySnapshot.docs) {
                     await deleteDoc(doc(db, "orders", docSnapshot.id));
                 }
@@ -330,7 +323,7 @@
         // --- INITIALIZATION ---
         function initApp() {
             listenForOrders();
-            switchView('dashboard'); // Start on the dashboard view
+            switchView('dashboard');
         }
 
     </script>
