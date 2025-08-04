@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ဧကရီ စားသောက်ဆိုင် - Menu</title>
-    <!-- Tailwind CSS for styling -->
+    <title>ဧကရီ မုန့်ဟင်းခါး၊ ရခိုင်မုန့်တီနှင့် အသုပ်စုံဆိုင် - Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Noto Sans Myanmar -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,10 +23,8 @@
 </head>
 <body class="bg-gray-100 antialiased">
 
-    <!-- Main container -->
     <div id="app-container" class="container mx-auto p-4 max-w-7xl">
 
-        <!-- Customer View -->
         <div id="customer-view">
             <header class="text-center mb-6 bg-white p-6 rounded-xl shadow-md">
                 <h1 class="text-4xl font-bold text-gray-800">ဧကရီ မုန့်ဟင်းခါး၊ ရခိုင်မုန့်တီနှင့် အသုပ်စုံဆိုင်</h1>
@@ -36,7 +32,7 @@
                     <p>ဆိုင်ထိုင်စား / ပါဆယ်ရပါတယ်။ Online Order လက်ခံပါတယ်။</p>
                     <p class="font-semibold">Online Order အတွက် Bolt နဲ့ ပို့ပေးပါတယ်ရှင့်။ </p>
                      <p> မုန့်ဖိုး Scan နဲ့ ကြိုရှင်းပြီး ပို့ခကို ရောက်မှ ဆိုင်ကယ်သမားကို ပေးချေရပါမည်။ </p>
-                      <p>   Ride details share ပေးတာကို ကြည့်ပေးပြီး ဖုန်းကိုင်ပေးပါရှင့်။</p>
+                     <p>   Ride details share ပေးတာကို ကြည့်ပေးပြီး ဖုန်းကိုင်ပေးပါရှင့်။</p>
                     <p><span class="font-bold">ဆိုင်လိပ်စာ:</span> 2 Soi Ramkhamhaeng 50, Hua Mak, Bang Kapi, 10240. </p>
                     <p>(Cha Michi အအေးဆိုင်ဘေးကပ်ရက် / ကြက်ဆီထမင်းဆိုင် မျက်စောင်းထိုး)</p>
                     <p><span class="font-bold">ဆက်သွယ်ရန်:</span> www.facebook.com/AkariMohinga (သို့) 081-476-6169</p>
@@ -45,21 +41,32 @@
             </header>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-                <!-- Menu Items -->
                 <div id="menu-items" class="md:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Menu items will be dynamically inserted here -->
-                     <p id="menu-loading-msg" class="col-span-full text-center text-gray-500">မီနူးကို ဖွင့်နေသည်...</p>
+                    <p id="menu-loading-msg" class="col-span-full text-center text-gray-500">မီနူးကို ဖွင့်နေသည်...</p>
                 </div>
 
-                <!-- Order Cart / Status View -->
                 <div class="md:col-span-5">
                     <div class="bg-white rounded-xl shadow-lg p-6 sticky top-8">
-                        <!-- Order Cart View -->
+                        
+                        <!-- Active Orders Status View -->
+                        <div id="active-orders-container" class="space-y-4 mb-6">
+                            <!-- Active order statuses will be rendered here -->
+                        </div>
+
+                        <!-- New Order Cart View -->
                         <div id="cart-view">
-                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">သင်၏ အော်ဒါ</h2>
+                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">သင်၏ အော်ဒါအသစ်</h2>
                             <div class="mb-4">
                                 <label for="customer-name" class="block text-sm font-medium text-gray-700">နာမည်</label>
                                 <input type="text" id="customer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="ဥပမာ - မောင်မောင်">
+                            </div>
+                            <div class="mb-4">
+                                <label for="customer-phone" class="block text-sm font-medium text-gray-700">ဖုန်းနံပါတ်</label>
+                                <input type="tel" id="customer-phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="ဥပမာ - 081-xxx-xxxx">
+                            </div>
+                            <div class="mb-4">
+                                <label for="customer-address" class="block text-sm font-medium text-gray-700">လိပ်စာ (Online Order အတွက်)</label>
+                                <textarea id="customer-address" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="အိမ်နံပါတ်၊ လမ်း၊ မြို့နယ်"></textarea>
                             </div>
                             <div id="cart-items" class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
                                  <p id="cart-empty-msg" class="text-gray-500 text-center py-8">သင်၏ ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။</p>
@@ -74,23 +81,11 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- Order Status View -->
-                        <div id="status-view" class="hidden text-center fade-in-animation">
-                             <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">ကျွန်ုပ်၏ အော်ဒါအခြေအနေ</h2>
-                             <div id="status-content" class="py-8">
-                                <p class="text-lg font-medium text-gray-700"><span id="status-customer-name" class="font-bold"></span> ၏ အော်ဒါ</p>
-                                <p id="order-status-text" class="text-3xl font-bold mt-2"></p>
-                             </div>
-                             <button id="new-order-btn" onclick="startNewOrder()" class="hidden w-full bg-green-600 text-white rounded-lg py-3 font-semibold hover:bg-green-700 transition-colors">
-                                အော်ဒါအသစ် မှာကြားရန်
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Modal for messages -->
         <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center">
                 <p id="modal-message" class="text-lg mb-6"></p>
@@ -98,7 +93,6 @@
             </div>
         </div>
         
-        <!-- Add-on Comment Modal -->
         <div id="addon-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto">
                 <h3 id="addon-modal-title" class="text-lg font-bold mb-4 text-center"></h3>
@@ -113,7 +107,6 @@
 
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -133,32 +126,33 @@
         
         // --- Hardcoded Default Menu ---
         const defaultMenu = [
-            { id: 'mohinga', name: 'မုန့်ဟင်းခါး', price: 40, image: 'https://placehold.co/400x300/f87171/ffffff' },
-            { id: 'rakhine-mont-ti', name: 'ရခိုင်မုန့်တီ', price: 30, image: 'https://placehold.co/400x300/fb923c/ffffff' },
-            { id: 'wheat-noodle-salad', name: 'ခေါက်ဆွဲသုပ်', price: 40, image: 'https://placehold.co/400x300/a78bfa/ffffff' },
-            { id: 'glass-noodle-salad', name: 'ကြာဇံသုပ်', price: 40, image: 'https://placehold.co/400x300/34d399/ffffff' },
-            { id: 'rice-noodle-salad', name: 'မုန့်ဖတ်သုပ်', price: 40, image: 'https://placehold.co/400x300/c084fc/ffffff' },
-            { id: 'mixed-salad', name: 'အစုံသုပ်', price: 40, image: 'https://placehold.co/400x300/facc15/ffffff' },
-            { id: 'fish-cake-salad', name: 'ငါးဖယ်သုပ်', price: 40, image: 'https://placehold.co/400x300/4ade80/ffffff' },
-            { id: 'tofu-salad', name: 'ပဲပြားသုပ်', price: 40, image: 'https://placehold.co/400x300/60a5fa/ffffff' },
-            { id: 'stuffed-tofu', name: 'ပဲပြားအဆာသွတ်', price: 40, image: 'https://placehold.co/400x300/22d3ee/ffffff' },
-            { id: 'stuffed-fish-cake', name: 'ငါးဖယ်အဆာသွတ်', price: 40, image: 'https://placehold.co/400x300/818cf8/ffffff' },
-            { id: 'papaya-salad', name: 'သင်္ဘောသီးသုပ်', price: 40, image: 'https://placehold.co/400x300/f97316/ffffff' },
-            { id: 'pea-fritters', name: 'ပဲကြော်', price: 10, image: 'https://placehold.co/400x300/fbbf24/ffffff', isAddon: true },
-            { id: 'fish-cake', name: 'ငါးဖယ်', price: 10, image: 'https://placehold.co/400x300/a3e635/ffffff', isAddon: true },
-            { id: 'century-egg', name: 'အိုးဘဲဥ', price: 15, image: 'https://placehold.co/400x300/9ca3af/ffffff', isAddon: true },
-            { id: 'shark', name: 'Shark', price: 30, image: 'https://placehold.co/400x300/34d399/ffffff' },
-            { id: 'kyaw-sein', name: 'ကျွဲစိမ်း', price: 30, image: 'https://placehold.co/400x300/34d399/ffffff' },
-            { id: 'speed', name: 'Speed', price: 20, image: 'https://placehold.co/400x300/ef4444/ffffff' },
-            { id: 'veve', name: 'VeVe', price: 20, image: 'https://placehold.co/400x300/ec4899/ffffff' },
-            { id: 'rocker', name: 'Rocker', price: 20, image: 'https://placehold.co/400x300/f59e0b/ffffff' },
-            { id: 'water', name: 'ရေသန့်', price: 5, image: 'https://placehold.co/400x300/38bdf8/ffffff' },
+            { id: 'mohinga', name: 'မုန့်ဟင်းခါး', price: 40, image: '/menu/mohinga.jpg' },
+            { id: 'rakhine-mont-ti', name: 'ရခိုင်မုန့်တီ', price: 30, image: '/menu/Rmot_ti_soup.jpg' },
+            { id: 'wheat-noodle-salad', name: 'ခေါက်ဆွဲသုပ်', price: 40, image: '/menu/wheat_noodle_salad.jpg' },
+            { id: 'glass-noodle-salad', name: 'ကြာဇံသုပ်', price: 40, image: '/menu/glass_noodle_salad.jpg' },
+            { id: 'rice-noodle-salad', name: 'မုန့်ဖတ်သုပ်', price: 40, image: '/menu/Rmot_ti.jpg' },
+            { id: 'mixed-salad', name: 'အစုံသုပ်', price: 40, image: '/menu/mixed_salad.jpg' },
+            { id: 'fish-cake-salad', name: 'ငါးဖယ်သုပ်', price: 40, image: '/menu/fish_cake_salad.jpg' },
+            { id: 'tofu-salad', name: 'ပဲပြားသုပ်', price: 40, image: '/menu/tofu_salad.jpg' },
+            { id: 'stuffed-tofu', name: 'ပဲပြားအဆာသွတ်', price: 40, image: '/menu/stuffed_tofu.jpg' },
+            { id: 'stuffed-fish-cake', name: 'ငါးဖယ်အဆာသွတ်', price: 40, image: '/menu/stuffed_fish_cake.jpg' },
+            { id: 'papaya-salad-slide', name: 'သင်္ဘောသီးအပြားသုပ်', price: 40, image: '/menu/papaya_slide.jpg' },
+             { id: 'papaya-salad', name: 'သင်္ဘောသီးသုပ်', price: 40, image: '/menu/papaya.jpg' },
+            { id: 'pea-fritters', name: 'ပဲကြော်', price: 10, image: '/menu/pea_fritters.jpg', isAddon: true },
+            { id: 'fish-cake', name: 'ငါးဖယ်', price: 10, image: '/menu/fish_cake.jpg', isAddon: true },
+            { id: 'century-egg', name: 'အိုးဘဲဥ', price: 15, image: '/menu/century_egg.jpg', isAddon: true },
+            { id: 'shark', name: 'Shark', price: 30, image: '/menu/shark_drink.jpg' },
+            { id: 'kyaw-sein', name: 'ကျွဲစိမ်း', price: 30, image: '/menu/kyaw_sein_drink.jpg' },
+            { id: 'speed', name: 'Speed', price: 20, image: '/menu/speed_drink.jpg' },
+            { id: 'veve', name: 'VeVe', price: 20, image: '/menu/veve_drink.jpg' },
+            { id: 'rocker', name: 'Rocker', price: 20, image: '/menu/rocker_drink.jpg' },
+            { id: 'water', name: 'ရေသန့်', price: 5, image: '/menu/water.jpg' },
         ];
 
         // --- STATE ---
         let menu = []; 
         let cart = [];
-        let activeOrderListener = null;
+        let activeOrderListeners = {};
         let currentAddonItemId = null;
 
         // --- FIREBASE INITIALIZATION ---
@@ -183,11 +177,7 @@
         const placeOrderBtn = document.getElementById('place-order-btn');
         const cartEmptyMsg = document.getElementById('cart-empty-msg');
         const menuLoadingMsg = document.getElementById('menu-loading-msg');
-        const cartView = document.getElementById('cart-view');
-        const statusView = document.getElementById('status-view');
-        const statusCustomerName = document.getElementById('status-customer-name');
-        const orderStatusText = document.getElementById('order-status-text');
-        const newOrderBtn = document.getElementById('new-order-btn');
+        const activeOrdersContainer = document.getElementById('active-orders-container');
         const addonModal = document.getElementById('addon-modal');
         const addonModalTitle = document.getElementById('addon-modal-title');
         const addonCommentInput = document.getElementById('addon-comment-input');
@@ -223,7 +213,7 @@
                 const itemEl = document.createElement('div');
                 itemEl.className = 'bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300';
                 itemEl.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/ffffff';">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/ffffff?text=No+Image';">
                     <div class="p-4">
                         <h3 class="font-bold text-lg">${item.name}</h3>
                         <p class="text-gray-600">${Number(item.price).toFixed(2)} ဘတ်</p>
@@ -332,9 +322,15 @@
 
         window.placeOrder = async () => {
             const nameInput = document.getElementById('customer-name');
+            const phoneInput = document.getElementById('customer-phone');
+            const addressInput = document.getElementById('customer-address');
+
             const customerName = nameInput.value.trim();
-            if (!customerName) {
-                showModal("ကျေးဇူးပြု၍ နာမည်ဖြည့်ပေးပါ။");
+            const customerPhone = phoneInput.value.trim();
+            const customerAddress = addressInput.value.trim();
+
+            if (!customerName || !customerPhone) {
+                showModal("ကျေးဇူးပြု၍ နာမည်နှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ။");
                 return;
             }
             if (cart.length === 0) {
@@ -347,6 +343,8 @@
 
             const order = {
                 customerName: customerName,
+                customerPhone: customerPhone,
+                customerAddress: customerAddress,
                 items: cart.map(item => ({ 
                     name: item.name, 
                     quantity: item.quantity, 
@@ -361,11 +359,18 @@
             try {
                 const docRef = await addDoc(ordersCollectionRef, order);
                 showModal("အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်!");
+                
+                const activeOrderIds = JSON.parse(sessionStorage.getItem('activeOrderIds')) || [];
+                activeOrderIds.push(docRef.id);
+                sessionStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
+                
+                sessionStorage.setItem('customerName', customerName);
+                sessionStorage.setItem('customerPhone', customerPhone);
+                sessionStorage.setItem('customerAddress', customerAddress);
+
                 cart = [];
-                nameInput.value = '';
                 renderCart();
-                sessionStorage.setItem('activeOrderId', docRef.id);
-                listenForOrderStatus(docRef.id);
+                listenForAllActiveOrders();
             } catch (error) {
                 console.error("Error placing order: ", error);
                 showModal("အော်ဒါတင်ရာတွင် အမှားအယွင်း ဖြစ်ပွားပါသည်။");
@@ -376,63 +381,79 @@
         };
 
         // --- ORDER STATUS FUNCTIONS ---
-        function listenForOrderStatus(orderId) {
-            if (activeOrderListener) {
-                activeOrderListener();
+        function listenForAllActiveOrders() {
+            const activeOrderIds = JSON.parse(sessionStorage.getItem('activeOrderIds')) || [];
+            if (activeOrderIds.length > 0 && !activeOrdersContainer.querySelector('h2')) {
+                 const header = document.createElement('h2');
+                 header.className = "text-2xl font-bold text-gray-800 border-b pb-3 mb-2";
+                 header.textContent = "သင်၏ လက်ရှိအော်ဒါများ";
+                 activeOrdersContainer.prepend(header);
             }
-            const orderRef = doc(db, "orders", orderId);
-            activeOrderListener = onSnapshot(orderRef, (doc) => {
-                if (doc.exists()) {
-                    const orderData = doc.data();
-                    updateStatusView(orderData);
-                } else {
-                    clearActiveOrder();
+
+            activeOrderIds.forEach(orderId => {
+                if (!activeOrderListeners[orderId]) { // Listen only if not already listening
+                    listenForSingleOrderStatus(orderId);
                 }
             });
         }
 
-        function updateStatusView(orderData) {
-            cartView.classList.add('hidden');
-            statusView.classList.remove('hidden');
+        function listenForSingleOrderStatus(orderId) {
+            const orderRef = doc(db, "orders", orderId);
+            activeOrderListeners[orderId] = onSnapshot(orderRef, (doc) => {
+                if (doc.exists()) {
+                    const orderData = doc.data();
+                    if (orderData.status === 'Completed') {
+                        removeActiveOrder(orderId);
+                    } else {
+                        renderOrUpdateStatusBox(orderId, orderData);
+                    }
+                } else {
+                    removeActiveOrder(orderId);
+                }
+            });
+        }
 
-            statusCustomerName.textContent = orderData.customerName;
+        function renderOrUpdateStatusBox(orderId, orderData) {
+            let statusBox = document.getElementById(`status-box-${orderId}`);
+            if (!statusBox) {
+                statusBox = document.createElement('div');
+                statusBox.id = `status-box-${orderId}`;
+                statusBox.className = 'p-4 border rounded-lg bg-gray-50 fade-in-animation';
+                activeOrdersContainer.appendChild(statusBox);
+            }
             
             const status = orderData.status;
             let statusDisplay = { text: status, color: 'text-gray-700' };
 
-            if (status === 'Pending') {
-                statusDisplay = { text: 'စောင့်ဆိုင်းနေသည်', color: 'text-red-500' };
-            } else if (status === 'Preparing') {
-                statusDisplay = { text: 'အစားအစာ ပြင်ဆင်နေသည်...', color: 'text-yellow-500' };
-            } else if (status === 'Ready') {
-                statusDisplay = { text: 'လာယူရန် အသင့်ဖြစ်ပါပြီ!', color: 'text-green-500' };
-            } else if (status === 'Completed') {
-                statusDisplay = { text: 'မှာကြားမှု ပြီးပါပြီ!', color: 'text-blue-500' };
-            }
+            if (status === 'Pending') statusDisplay = { text: 'စောင့်ဆိုင်းနေသည်', color: 'text-red-500' };
+            if (status === 'Preparing') statusDisplay = { text: 'ပြင်ဆင်နေသည်...', color: 'text-yellow-500' };
+            if (status === 'Ready') statusDisplay = { text: 'အသင့်ဖြစ်ပါပြီ!', color: 'text-green-500' };
             
-            orderStatusText.textContent = statusDisplay.text;
-            orderStatusText.className = `text-3xl font-bold mt-2 ${statusDisplay.color}`;
-
-            if (status === 'Completed') {
-                newOrderBtn.classList.remove('hidden');
-                if(activeOrderListener) activeOrderListener();
-            } else {
-                newOrderBtn.classList.add('hidden');
-            }
+            statusBox.innerHTML = `
+                <p class="font-semibold text-gray-700">${orderData.customerName} ၏ အော်ဒါ</p>
+                <p class="font-bold text-xl ${statusDisplay.color}">${statusDisplay.text}</p>
+            `;
         }
 
-        window.startNewOrder = () => {
-            clearActiveOrder();
-        }
-
-        function clearActiveOrder() {
-            sessionStorage.removeItem('activeOrderId');
-            if (activeOrderListener) {
-                activeOrderListener();
-                activeOrderListener = null;
+        function removeActiveOrder(orderId) {
+            // Unsubscribe from listener
+            if (activeOrderListeners[orderId]) {
+                activeOrderListeners[orderId]();
+                delete activeOrderListeners[orderId];
             }
-            statusView.classList.add('hidden');
-            cartView.classList.remove('hidden');
+            // Remove from UI
+            const statusBox = document.getElementById(`status-box-${orderId}`);
+            if (statusBox) statusBox.remove();
+            
+            // Remove from sessionStorage
+            let activeOrderIds = JSON.parse(sessionStorage.getItem('activeOrderIds')) || [];
+            activeOrderIds = activeOrderIds.filter(id => id !== orderId);
+            sessionStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
+
+            if (activeOrderIds.length === 0) {
+                 const header = activeOrdersContainer.querySelector('h2');
+                 if (header) header.remove();
+            }
         }
         
         window.showModal = (message) => { document.getElementById('modal-message').textContent = message; document.getElementById('message-modal').classList.remove('hidden'); }
@@ -441,10 +462,8 @@
         // --- AUTHENTICATION & INITIALIZATION ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in (or was persisted from a previous session).
-                initApp(); // Run the main app logic
+                initApp();
             } else {
-                // User is not signed in. Sign them in anonymously.
                 signInAnonymously(auth).catch((error) => {
                     console.error("Anonymous sign-in failed:", error);
                     showModal("Could not connect to the ordering service.");
@@ -454,12 +473,13 @@
 
         function initApp() {
             listenForMenu();
-            const activeOrderId = sessionStorage.getItem('activeOrderId');
-            if (activeOrderId) {
-                listenForOrderStatus(activeOrderId);
-            } else {
-                renderCart();
-            }
+            listenForAllActiveOrders();
+            renderCart();
+            
+            // Pre-fill customer details
+            document.getElementById('customer-name').value = sessionStorage.getItem('customerName') || '';
+            document.getElementById('customer-phone').value = sessionStorage.getItem('customerPhone') || '';
+            document.getElementById('customer-address').value = sessionStorage.getItem('customerAddress') || '';
         }
 
     </script>
