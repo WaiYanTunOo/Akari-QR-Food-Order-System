@@ -54,10 +54,11 @@
                         <h1 class="text-4xl font-bold text-gray-800">Order Dashboard</h1>
                         <p class="text-gray-500">Manage active orders and payments</p>
                     </div>
-                     <div class="flex flex-col items-end">
-                        <button onclick="switchView('admin')" class="bg-blue-100 text-blue-700 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-blue-200 transition-all">Admin Panel</button>
-                        <button onclick="clearCompletedOrders()" class="bg-yellow-100 text-yellow-800 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-yellow-200 transition-all mt-2">Clear Completed</button>
-                        <button onclick="logout()" class="bg-red-100 text-red-700 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-red-200 transition-all mt-2">Sign Out</button>
+                     <div class="flex flex-col items-end space-y-2">
+                        <button onclick="switchView('admin')" class="bg-blue-100 text-blue-700 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-blue-200 transition-all w-full text-center">Admin Panel</button>
+                        <button onclick="switchView('records')" class="bg-green-100 text-green-800 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-green-200 transition-all w-full text-center">Order Records</button>
+                        <button onclick="clearCompletedOrders()" class="bg-yellow-100 text-yellow-800 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-yellow-200 transition-all w-full text-center">Clear Completed</button>
+                        <button onclick="logout()" class="bg-red-100 text-red-700 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-red-200 transition-all w-full text-center">Sign Out</button>
                     </div>
                 </header>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -100,6 +101,19 @@
                             <button type="submit" class="w-full bg-indigo-600 text-white rounded-lg py-3 font-semibold hover:bg-indigo-700 transition-colors">Add Menu Item</button>
                         </div>
                     </form>
+                </div>
+            </div>
+            
+            <div id="records-view" class="hidden">
+                 <header class="flex justify-between items-center mb-8">
+                    <div class="text-center flex-grow">
+                         <h1 class="text-4xl font-bold text-gray-800">Order Records</h1>
+                         <p class="text-gray-500">List of all completed orders</p>
+                    </div>
+                    <button onclick="switchView('dashboard')" class="bg-white shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-all">Back to Dashboard</button>
+                </header>
+                <div id="records-list" class="bg-white rounded-xl shadow-lg p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                    <!-- Completed orders will be rendered here -->
                 </div>
             </div>
         </div>
@@ -151,9 +165,11 @@
         const loginForm = document.getElementById('login-form');
         const dashboardView = document.getElementById('dashboard-view');
         const adminView = document.getElementById('admin-view');
+        const recordsView = document.getElementById('records-view');
         const activeOrdersContainer = document.getElementById('active-orders');
         const paymentDueOrdersContainer = document.getElementById('payment-due-orders');
         const addMenuItemForm = document.getElementById('add-menu-item-form');
+        const recordsList = document.getElementById('records-list');
 
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, (user) => {
@@ -246,7 +262,10 @@
                     <div>${statusIndicator}</div>
                 </div>
                 <ul class="space-y-1 mb-4">${itemsHtml}</ul>
-                <button onclick="updateOrderStatus('${order.id}', '${config.nextStatus}')" class="w-full ${config.color} text-white font-semibold py-2 rounded-lg hover:opacity-90 transition-opacity">${config.nextAction}</button>`;
+                <div class="flex gap-2 mt-4">
+                    <button onclick="updateOrderStatus('${order.id}', '${config.nextStatus}')" class="w-full ${config.color} text-white font-semibold py-2 rounded-lg hover:opacity-90 transition-opacity">${config.nextAction}</button>
+                    <button onclick="removeOrder('${order.id}')" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-opacity">Remove</button>
+                </div>`;
 
             if (order.status === 'Pending' || order.status === 'Preparing') activeOrdersContainer.appendChild(card);
             else if (order.status === 'Ready') paymentDueOrdersContainer.appendChild(card);
@@ -262,7 +281,21 @@
             }
         };
 
+        window.removeOrder = async (orderId) => {
+             if (confirm("Are you sure you want to remove this order? This cannot be undone.")) {
+                try {
+                    await deleteDoc(doc(db, "orders", orderId));
+                    showModal("Order removed successfully.");
+                } catch (error) {
+                    console.error("Error removing order: ", error);
+                    showModal("Failed to remove order.");
+                }
+            }
+        };
+
         window.clearCompletedOrders = async () => {
+            if (!confirm("Are you sure you want to clear ALL completed orders from the database?")) return;
+
             const q = query(ordersCollectionRef, where("status", "==", "Completed"));
             try {
                 const querySnapshot = await getDocs(q);
@@ -282,6 +315,37 @@
                 showModal("Failed to clear completed orders.");
             }
         };
+
+        function listenForCompletedOrders() {
+            const q = query(ordersCollectionRef, where("status", "==", "Completed"));
+            onSnapshot(q, (snapshot) => {
+                if (snapshot.empty) {
+                    recordsList.innerHTML = '<p>No completed orders found.</p>';
+                    return;
+                }
+                recordsList.innerHTML = '';
+                snapshot.docs.forEach(doc => {
+                    const order = { id: doc.id, ...doc.data() };
+                    const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : 'N/A';
+                    const itemsHtml = order.items.map(item => `<li>${item.quantity} x ${item.name}</li>`).join('');
+                    
+                    const recordEl = document.createElement('div');
+                    recordEl.className = 'p-4 border rounded-lg';
+                    recordEl.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="font-bold">${order.customerName}</p>
+                                <p class="text-sm text-gray-500">${order.customerPhone || ''}</p>
+                            </div>
+                            <p class="text-sm text-gray-500">${orderDate}</p>
+                        </div>
+                        <ul class="list-disc list-inside text-sm my-2">${itemsHtml}</ul>
+                        <p class="text-right font-bold mt-2">Total: ฿${order.totalPrice.toFixed(2)}</p>
+                    `;
+                    recordsList.appendChild(recordEl);
+                });
+            });
+        }
 
         if (addMenuItemForm) {
             addMenuItemForm.addEventListener('submit', async (e) => {
@@ -308,11 +372,16 @@
 
         // --- UI & VIEW MANAGEMENT ---
         window.switchView = (view) => {
+            dashboardView.classList.add('hidden');
+            adminView.classList.add('hidden');
+            recordsView.classList.add('hidden');
+
             if (view === 'admin') {
-                dashboardView.classList.add('hidden');
                 adminView.classList.remove('hidden');
-            } else { // 'dashboard'
-                adminView.classList.add('hidden');
+            } else if (view === 'records') {
+                recordsView.classList.remove('hidden');
+                listenForCompletedOrders();
+            } else { 
                 dashboardView.classList.remove('hidden');
             }
         }
