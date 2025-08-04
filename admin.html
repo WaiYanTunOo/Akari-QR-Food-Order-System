@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js for sound notifications -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple animation for new orders */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .new-order-animation {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 antialiased">
+
+    <!-- Main container -->
+    <div id="app-container" class="container mx-auto p-4 max-w-7xl">
+
+        <!-- Passcode View -->
+        <div id="passcode-view" class="max-w-md mx-auto mt-20">
+             <div class="bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Enter Admin Passcode</h2>
+                <form id="passcode-form">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="passcode" class="block text-sm font-medium text-gray-700">Passcode</label>
+                            <input type="password" id="passcode" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" class="w-full bg-indigo-600 text-white rounded-lg py-3 font-semibold hover:bg-indigo-700 transition-colors">Enter</button>
+                    </div>
+                </form>
+             </div>
+        </div>
+
+        <!-- Main App View (Dashboard and Admin Panel) -->
+        <div id="main-app" class="hidden">
+            <!-- Dashboard View -->
+            <div id="dashboard-view">
+                <header class="flex justify-between items-center mb-8">
+                    <div class="text-center flex-grow">
+                        <h1 class="text-4xl font-bold text-gray-800">Order Dashboard</h1>
+                        <p class="text-gray-500">Manage active orders and payments</p>
+                    </div>
+                     <div>
+                        <button onclick="switchView('admin')" class="bg-blue-100 text-blue-700 shadow-lg rounded-full px-4 py-2 text-sm font-medium hover:bg-blue-200 transition-all">Admin Panel</button>
+                    </div>
+                </header>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Active Orders Column -->
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4 text-gray-700">Active Orders</h2>
+                        <div id="active-orders" class="space-y-4"></div>
+                    </div>
+                    <!-- Ready for Payment Column -->
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4 text-gray-700">Ready for Payment</h2>
+                        <div id="payment-due-orders" class="space-y-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin View -->
+            <div id="admin-view" class="hidden">
+                <header class="flex justify-between items-center mb-8">
+                    <div class="text-center flex-grow">
+                         <h1 class="text-4xl font-bold text-gray-800">Admin Panel</h1>
+                         <p class="text-gray-500">Add new items to the menu</p>
+                    </div>
+                    <button onclick="switchView('dashboard')" class="bg-white shadow-lg rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-all">Back to Dashboard</button>
+                </header>
+                <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
+                    <form id="add-menu-item-form">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="item-name" class="block text-sm font-medium text-gray-700">Item Name</label>
+                                <input type="text" id="item-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., Pad Thai">
+                            </div>
+                            <div>
+                                <label for="item-price" class="block text-sm font-medium text-gray-700">Price</label>
+                                <input type="number" id="item-price" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., 120">
+                            </div>
+                            <div>
+                                <label for="item-image" class="block text-sm font-medium text-gray-700">Image URL</label>
+                                <input type="url" id="item-image" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://placehold.co/...">
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <button type="submit" class="w-full bg-indigo-600 text-white rounded-lg py-3 font-semibold hover:bg-indigo-700 transition-colors">Add Menu Item</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal for messages -->
+        <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center">
+                <p id="modal-message" class="text-lg mb-6"></p>
+                <button onclick="closeModal()" class="bg-indigo-600 text-white rounded-lg px-6 py-2 font-semibold hover:bg-indigo-700 transition-colors">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
+          authDomain: "akari-qr-order-system.firebaseapp.com",
+          projectId: "akari-qr-order-system",
+          storageBucket: "akari-qr-order-system.appspot.com",
+          messagingSenderId: "646414842831",
+          appId: "1:646414842831:web:0b76fc2779b7afc26030ba",
+          measurementId: "G-VWBWZ2NHK9"
+        };
+        
+        // --- FIREBASE INITIALIZATION ---
+        let app, auth, db, ordersCollectionRef, menuCollectionRef;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            setLogLevel('debug'); 
+
+            ordersCollectionRef = collection(db, "orders");
+            menuCollectionRef = collection(db, "menu");
+            
+            // Sign in anonymously to interact with order rules
+            await signInAnonymously(auth);
+
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+            showModal("Could not connect to the ordering service. Please try again later.");
+        }
+        
+        // --- DOM ELEMENTS ---
+        const passcodeView = document.getElementById('passcode-view');
+        const mainApp = document.getElementById('main-app');
+        const passcodeForm = document.getElementById('passcode-form');
+        const dashboardView = document.getElementById('dashboard-view');
+        const adminView = document.getElementById('admin-view');
+        const activeOrdersContainer = document.getElementById('active-orders');
+        const paymentDueOrdersContainer = document.getElementById('payment-due-orders');
+        const addMenuItemForm = document.getElementById('add-menu-item-form');
+
+        // --- PASSCODE AUTHENTICATION ---
+        passcodeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const enteredPasscode = document.getElementById('passcode').value;
+            // The passcode is checked here on the client side for simplicity.
+            // The real security is the Firestore Rule.
+            if (enteredPasscode === "akari-admin-secret") {
+                sessionStorage.setItem('adminPasscode', enteredPasscode);
+                passcodeView.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                initApp();
+            } else {
+                showModal("Incorrect passcode.");
+            }
+        });
+
+        // --- DASHBOARD/ADMIN FUNCTIONS ---
+        const statusConfig = {
+            'Pending': { color: 'bg-red-500', nextAction: 'Start Cooking', nextStatus: 'Preparing' },
+            'Preparing': { color: 'bg-yellow-500', nextAction: 'Mark as Ready', nextStatus: 'Ready' },
+            'Ready': { color: 'bg-green-500', nextAction: 'Mark as Paid', nextStatus: 'Completed' }
+        };
+
+        function listenForOrders() {
+            const q = query(ordersCollectionRef, where("status", "in", ["Pending", "Preparing", "Ready"]));
+            onSnapshot(q, (snapshot) => {
+                if (!activeOrdersContainer || !paymentDueOrdersContainer) return;
+                activeOrdersContainer.innerHTML = '';
+                paymentDueOrdersContainer.innerHTML = '';
+
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added" && change.doc.data().status === 'Pending') {
+                        try {
+                            const synth = new Tone.Synth().toDestination();
+                            synth.triggerAttackRelease("C4", "8n");
+                        } catch(e) { console.error("Could not play sound", e); }
+                    }
+                });
+
+                snapshot.docs.forEach(doc => renderOrderCard({ id: doc.id, ...doc.data() }));
+            }, (error) => console.error("Error listening to orders:", error));
+        }
+        
+        function renderOrderCard(order) {
+            const config = statusConfig[order.status];
+            if (!config) return;
+
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-md p-4 new-order-animation';
+            const itemsHtml = order.items.map(item => `<li class="flex justify-between text-sm"><span>${item.quantity} x ${item.name}</span><span class="text-gray-500">฿${(item.quantity * item.price).toFixed(2)}</span></li>`).join('');
+            const orderTime = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleTimeString() : 'N/A';
+            let statusIndicator = order.status === 'Ready' ? `<div class="font-bold text-lg text-green-600">Total: ฿${order.totalPrice.toFixed(2)}</div>` : `<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full ${config.color} text-white">${order.status}</span>`;
+
+            card.innerHTML = `
+                <div class="flex justify-between items-start border-b pb-2 mb-2">
+                    <div><h3 class="font-bold text-lg">Name: ${order.customerName}</h3><p class="text-sm text-gray-500">Time: ${orderTime}</p></div>
+                    <div>${statusIndicator}</div>
+                </div>
+                <ul class="space-y-1 mb-4">${itemsHtml}</ul>
+                <button onclick="updateOrderStatus('${order.id}', '${config.nextStatus}')" class="w-full ${config.color} text-white font-semibold py-2 rounded-lg hover:opacity-90 transition-opacity">${config.nextAction}</button>`;
+
+            if (order.status === 'Pending' || order.status === 'Preparing') activeOrdersContainer.appendChild(card);
+            else if (order.status === 'Ready') paymentDueOrdersContainer.appendChild(card);
+        }
+
+        window.updateOrderStatus = async (orderId, newStatus) => {
+            const orderRef = doc(db, `orders`, orderId);
+            try {
+                await updateDoc(orderRef, { status: newStatus });
+            } catch (error) {
+                console.error("Error updating order status:", error);
+                showModal("Failed to update order.");
+            }
+        };
+
+        if (addMenuItemForm) {
+            addMenuItemForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('item-name').value;
+                const price = parseFloat(document.getElementById('item-price').value);
+                const image = document.getElementById('item-image').value;
+                const passcode = sessionStorage.getItem('adminPasscode');
+
+                if (!name || isNaN(price) || !image) {
+                    showModal("Please fill out all fields correctly.");
+                    return;
+                }
+                if (!passcode) {
+                    showModal("Passcode not found. Please re-enter.");
+                    return;
+                }
+
+                try {
+                    // Include the passcode in the data sent to Firestore for validation by security rules.
+                    await addDoc(menuCollectionRef, { name, price, image, passcode });
+                    showModal("Menu item added successfully!");
+                    addMenuItemForm.reset();
+                } catch (error) {
+                    console.error("Error adding menu item:", error);
+                    showModal("Failed to add menu item. Check security rules and passcode.");
+                }
+            });
+        }
+
+        // --- UI & VIEW MANAGEMENT ---
+        window.switchView = (view) => {
+            if (view === 'admin') {
+                dashboardView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+            } else { // 'dashboard'
+                adminView.classList.add('hidden');
+                dashboardView.classList.remove('hidden');
+            }
+        }
+        
+        window.showModal = (message) => { document.getElementById('modal-message').textContent = message; document.getElementById('message-modal').classList.remove('hidden'); }
+        window.closeModal = () => { document.getElementById('message-modal').classList.add('hidden'); }
+
+        // --- INITIALIZATION ---
+        function initApp() {
+            listenForOrders();
+            switchView('dashboard'); // Start on the dashboard view
+        }
+        
+        // Check if user has already entered passcode in this session
+        if (sessionStorage.getItem('adminPasscode') === "akari-admin-secret") {
+            passcodeView.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            initApp();
+        }
+
+    </script>
+</body>
+</html>
