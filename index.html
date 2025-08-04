@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ဧကရီ မုန့်ဟင်းခါး၊ ရခိုင်မုန့်တီနှင့် အသုပ်စုံဆိုင် - Menu</title>
+    <title>ဧကရီ စားသောက်ဆိုင် - Menu</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Noto Sans Myanmar -->
@@ -35,8 +35,7 @@
                 <div class="mt-4 text-sm text-gray-600 space-y-2 max-w-3xl mx-auto">
                     <p>ဆိုင်ထိုင်စား / ပါဆယ်ရပါတယ်။ Online Order လက်ခံပါတယ်။</p>
                     <p class="font-semibold">Online Order အတွက် Bolt နဲ့ ပို့ပေးပါတယ်ရှင့်။ </p>
-                    <p> မုန့်ဖိုး Scan နဲ့ ကြိုရှင်းပြီး ပို့ခကို ရောက်မှ ဆိုင်ကယ်သမားကို ပေးချေရပါမည်။ </p>
-                    <p>Ride details share ပေးတာကို ကြည့်ပေးပြီး ဖုန်းကိုင်ပေးပါရှင့်။</p>
+                     <p> မုန့်ဖိုး Scan နဲ့ ကြိုရှင်းပြီး ပို့ခကို ရောက်မှ ဆိုင်ကယ်သမားကို ပေးချေရပါမည်။ Ride details share ပေးတာကို ကြည့်ပေးပြီး ဖုန်းကိုင်ပေးပါရှင့်။</p>
                     <p><span class="font-bold">ဆိုင်လိပ်စာ:</span> 2 Soi Ramkhamhaeng 50, Hua Mak, Bang Kapi, 10240. </p>
                     <p>(Cha Michi အအေးဆိုင်ဘေးကပ်ရက် / ကြက်ဆီထမင်းဆိုင် မျက်စောင်းထိုး)</p>
                     <p><span class="font-bold">ဆက်သွယ်ရန်:</span> www.facebook.com/AkariMohinga (သို့) 081-476-6169</p>
@@ -117,7 +116,7 @@
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONFIGURATION ---
@@ -171,9 +170,6 @@
 
             ordersCollectionRef = collection(db, "orders");
             menuCollectionRef = collection(db, "menu");
-            
-            await signInAnonymously(auth);
-
         } catch (error) {
             console.error("Firebase initialization failed:", error);
             showModal("Could not connect to the ordering service. Please try again later.");
@@ -441,8 +437,21 @@
         window.showModal = (message) => { document.getElementById('modal-message').textContent = message; document.getElementById('message-modal').classList.remove('hidden'); }
         window.closeModal = () => { document.getElementById('message-modal').classList.add('hidden'); }
 
-        // --- INITIALIZATION ---
-        function init() {
+        // --- AUTHENTICATION & INITIALIZATION ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in (or was persisted from a previous session).
+                initApp(); // Run the main app logic
+            } else {
+                // User is not signed in. Sign them in anonymously.
+                signInAnonymously(auth).catch((error) => {
+                    console.error("Anonymous sign-in failed:", error);
+                    showModal("Could not connect to the ordering service.");
+                });
+            }
+        });
+
+        function initApp() {
             listenForMenu();
             const activeOrderId = sessionStorage.getItem('activeOrderId');
             if (activeOrderId) {
@@ -452,7 +461,6 @@
             }
         }
 
-        init();
     </script>
 </body>
 </html>
