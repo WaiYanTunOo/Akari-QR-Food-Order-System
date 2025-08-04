@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ဧကရီ စားသောက်ဆိုင် - Menu</title>
+    <title>ဧကရီ မုန့်ဟင်းခါး၊ ရခိုင်မုန့်တီနှင့် အသုပ်စုံဆိုင် - Menu</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Noto Sans Myanmar -->
@@ -31,12 +31,15 @@
         <!-- Customer View -->
         <div id="customer-view">
             <header class="text-center mb-6 bg-white p-6 rounded-xl shadow-md">
-                <h1 class="text-4xl font-bold text-gray-800">ဧကရီ စားသောက်ဆိုင်</h1>
+                <h1 class="text-4xl font-bold text-gray-800">ဧကရီ မုန့်ဟင်းခါး၊ ရခိုင်မုန့်တီနှင့် အသုပ်စုံဆိုင်</h1>
                 <div class="mt-4 text-sm text-gray-600 space-y-2 max-w-3xl mx-auto">
                     <p>ဆိုင်ထိုင်စား / ပါဆယ်ရပါတယ်။ Online Order လက်ခံပါတယ်။</p>
-                    <p class="font-semibold">Online Order အတွက် Bolt နဲ့ ပို့ပေးပါတယ်ရှင့်။ COD မရပါ။ မုန့်ဖိုး Scan နဲ့ ကြိုရှင်းပြီး ပို့ခကို ရောက်မှ ဆိုင်ကယ်သမားကို ပေးချေရပါမည်။ Ride details share ပေးတာကို ကြည့်ပေးပြီး ဖုန်းကိုင်ပေးပါရှင့်။</p>
-                    <p><span class="font-bold">ဆိုင်လိပ်စာ:</span> 2 Soi Ramkhamhaeng 50, Hua Mak, Bang Kapi, 10240. (Cha Michi အအေးဆိုင်ဘေးကပ်ရက် / ကြက်ဆီထမင်းဆိုင် မျက်စောင်းထိုး)</p>
-                    <p><span class="font-bold">ဆက်သွယ်ရန်:</span> Page Messenger (သို့) 081-476-6169</p>
+                    <p class="font-semibold">Online Order အတွက် Bolt နဲ့ ပို့ပေးပါတယ်ရှင့်။ </p>
+                    <p> မုန့်ဖိုး Scan နဲ့ ကြိုရှင်းပြီး ပို့ခကို ရောက်မှ ဆိုင်ကယ်သမားကို ပေးချေရပါမည်။ </p>
+                    <p>Ride details share ပေးတာကို ကြည့်ပေးပြီး ဖုန်းကိုင်ပေးပါရှင့်။</p>
+                    <p><span class="font-bold">ဆိုင်လိပ်စာ:</span> 2 Soi Ramkhamhaeng 50, Hua Mak, Bang Kapi, 10240. </p>
+                    <p>(Cha Michi အအေးဆိုင်ဘေးကပ်ရက် / ကြက်ဆီထမင်းဆိုင် မျက်စောင်းထိုး)</p>
+                    <p><span class="font-bold">ဆက်သွယ်ရန်:</span> www.facebook.com/AkariMohinga (သို့) 081-476-6169</p>
                     <p class="font-semibold text-red-500 pt-2">အသုပ်တွေက မိုးချုပ်တာနဲ့ ကုန်တတ်တာမို့ မြန်မြန်လာရောက် သုံးဆောင်ဖို့တော့ လိုပါမယ်နော်။</p>
                 </div>
             </header>
@@ -53,7 +56,7 @@
                     <div class="bg-white rounded-xl shadow-lg p-6 sticky top-8">
                         <!-- Order Cart View -->
                         <div id="cart-view">
-                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">သင်၏ မှာကြားချက်</h2>
+                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">သင်၏ အော်ဒါ</h2>
                             <div class="mb-4">
                                 <label for="customer-name" class="block text-sm font-medium text-gray-700">နာမည်</label>
                                 <input type="text" id="customer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="ဥပမာ - မောင်မောင်">
@@ -94,6 +97,19 @@
                 <button onclick="closeModal()" class="bg-indigo-600 text-white rounded-lg px-6 py-2 font-semibold hover:bg-indigo-700 transition-colors">ပိတ်မည်</button>
             </div>
         </div>
+        
+        <!-- Add-on Comment Modal -->
+        <div id="addon-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto">
+                <h3 id="addon-modal-title" class="text-lg font-bold mb-4 text-center"></h3>
+                <p class="text-sm text-gray-600 mb-4 text-center">ဘယ်ဟင်းထဲ ထည့်မလဲ။ (ဥပမာ - မုန့်ဟင်းခါး)</p>
+                <input type="text" id="addon-comment-input" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm mb-4">
+                <div class="flex justify-end gap-4 mt-6">
+                    <button onclick="cancelAddon()" class="bg-gray-200 text-gray-800 rounded-lg px-6 py-2 font-semibold hover:bg-gray-300 transition-colors">မထည့်တော့ပါ</button>
+                    <button onclick="confirmAddon()" class="bg-indigo-600 text-white rounded-lg px-6 py-2 font-semibold hover:bg-indigo-700 transition-colors">ထည့်မည်</button>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -117,29 +133,33 @@
         
         // --- Hardcoded Default Menu ---
         const defaultMenu = [
-            { id: 'mohinga', name: 'မုန့်ဟင်းခါး', price: 40, image: 'https://placehold.co/400x300/f87171/ffffff?text=မုန့်ဟင်းခါး' },
-            { id: 'rakhine-mont-ti', name: 'ရခိုင်မုန့်တီ', price: 30, image: 'https://placehold.co/400x300/fb923c/ffffff?text=ရခိုင်မုန့်တီ' },
-            { id: 'wheat-noodle-salad', name: 'ခေါက်ဆွဲသုပ်', price: 40, image: 'https://placehold.co/400x300/a78bfa/ffffff?text=ခေါက်ဆွဲသုပ်' },
-            { id: 'glass-noodle-salad', name: 'ကြာဇံသုပ်', price: 40, image: 'https://placehold.co/400x300/34d399/ffffff?text=ကြာဇံသုပ်' },
-            { id: 'rice-noodle-salad', name: 'မုန့်ဖတ်သုပ်', price: 40, image: 'https://placehold.co/400x300/c084fc/ffffff?text=မုန့်ဖတ်သုပ်' },
-            { id: 'mixed-salad', name: 'အစုံသုပ်', price: 40, image: 'https://placehold.co/400x300/facc15/ffffff?text=အစုံသုပ်' },
-            { id: 'fish-cake-salad', name: 'ငါးဖယ်သုပ်', price: 40, image: 'https://placehold.co/400x300/4ade80/ffffff?text=ငါးဖယ်သုပ်' },
-            { id: 'tofu-salad', name: 'ပဲပြားသုပ်', price: 40, image: 'https://placehold.co/400x300/60a5fa/ffffff?text=ပဲပြားသုပ်' },
-            { id: 'stuffed-tofu', name: 'ပဲပြားအဆာသွတ်', price: 40, image: 'https://placehold.co/400x300/22d3ee/ffffff?text=ပဲပြားအဆာသွတ်' },
-            { id: 'stuffed-fish-cake', name: 'ငါးဖယ်အဆာသွတ်', price: 40, image: 'https://placehold.co/400x300/818cf8/ffffff?text=ငါးဖယ်အဆာသွတ်' },
-            { id: 'papaya-salad', name: 'သင်္ဘောသီးသုပ်', price: 40, image: 'https://placehold.co/400x300/f97316/ffffff?text=သင်္ဘောသီးသုပ်' },
-            { id: 'pea-fritters', name: 'ပဲကြော်', price: 10, image: 'https://placehold.co/400x300/fbbf24/ffffff?text=ပဲကြော်' },
-            { id: 'fish-cake', name: 'ငါးဖယ်', price: 10, image: 'https://placehold.co/400x300/a3e635/ffffff?text=ငါးဖယ်' },
-            { id: 'century-egg', name: 'အိုးဘဲဥ', price: 15, image: 'https://placehold.co/400x300/9ca3af/ffffff?text=အိုးဘဲဥ' },
-            { id: 'shark-kyaw-sein', name: 'Shark / ကျွဲစိမ်း', price: 30, image: 'https://placehold.co/400x300/34d399/ffffff?text=ကျွဲစိမ်း' },
-            { id: 'speed-veve-rocker', name: 'Speed / VeVe / Rocker', price: 20, image: 'https://placehold.co/400x300/ef4444/ffffff?text=Speed' },
-            { id: 'water', name: 'ရေသန့်', price: 5, image: 'https://placehold.co/400x300/38bdf8/ffffff?text=ရေသန့်' },
+            { id: 'mohinga', name: 'မုန့်ဟင်းခါး', price: 40, image: 'https://placehold.co/400x300/f87171/ffffff' },
+            { id: 'rakhine-mont-ti', name: 'ရခိုင်မုန့်တီ', price: 30, image: 'https://placehold.co/400x300/fb923c/ffffff' },
+            { id: 'wheat-noodle-salad', name: 'ခေါက်ဆွဲသုပ်', price: 40, image: 'https://placehold.co/400x300/a78bfa/ffffff' },
+            { id: 'glass-noodle-salad', name: 'ကြာဇံသုပ်', price: 40, image: 'https://placehold.co/400x300/34d399/ffffff' },
+            { id: 'rice-noodle-salad', name: 'မုန့်ဖတ်သုပ်', price: 40, image: 'https://placehold.co/400x300/c084fc/ffffff' },
+            { id: 'mixed-salad', name: 'အစုံသုပ်', price: 40, image: 'https://placehold.co/400x300/facc15/ffffff' },
+            { id: 'fish-cake-salad', name: 'ငါးဖယ်သုပ်', price: 40, image: 'https://placehold.co/400x300/4ade80/ffffff' },
+            { id: 'tofu-salad', name: 'ပဲပြားသုပ်', price: 40, image: 'https://placehold.co/400x300/60a5fa/ffffff' },
+            { id: 'stuffed-tofu', name: 'ပဲပြားအဆာသွတ်', price: 40, image: 'https://placehold.co/400x300/22d3ee/ffffff' },
+            { id: 'stuffed-fish-cake', name: 'ငါးဖယ်အဆာသွတ်', price: 40, image: 'https://placehold.co/400x300/818cf8/ffffff' },
+            { id: 'papaya-salad', name: 'သင်္ဘောသီးသုပ်', price: 40, image: 'https://placehold.co/400x300/f97316/ffffff' },
+            { id: 'pea-fritters', name: 'ပဲကြော်', price: 10, image: 'https://placehold.co/400x300/fbbf24/ffffff', isAddon: true },
+            { id: 'fish-cake', name: 'ငါးဖယ်', price: 10, image: 'https://placehold.co/400x300/a3e635/ffffff', isAddon: true },
+            { id: 'century-egg', name: 'အိုးဘဲဥ', price: 15, image: 'https://placehold.co/400x300/9ca3af/ffffff', isAddon: true },
+            { id: 'shark', name: 'Shark', price: 30, image: 'https://placehold.co/400x300/34d399/ffffff' },
+            { id: 'kyaw-sein', name: 'ကျွဲစိမ်း', price: 30, image: 'https://placehold.co/400x300/34d399/ffffff' },
+            { id: 'speed', name: 'Speed', price: 20, image: 'https://placehold.co/400x300/ef4444/ffffff' },
+            { id: 'veve', name: 'VeVe', price: 20, image: 'https://placehold.co/400x300/ec4899/ffffff' },
+            { id: 'rocker', name: 'Rocker', price: 20, image: 'https://placehold.co/400x300/f59e0b/ffffff' },
+            { id: 'water', name: 'ရေသန့်', price: 5, image: 'https://placehold.co/400x300/38bdf8/ffffff' },
         ];
 
         // --- STATE ---
         let menu = []; 
         let cart = [];
         let activeOrderListener = null;
+        let currentAddonItemId = null;
 
         // --- FIREBASE INITIALIZATION ---
         let app, auth, db, ordersCollectionRef, menuCollectionRef;
@@ -171,6 +191,9 @@
         const statusCustomerName = document.getElementById('status-customer-name');
         const orderStatusText = document.getElementById('order-status-text');
         const newOrderBtn = document.getElementById('new-order-btn');
+        const addonModal = document.getElementById('addon-modal');
+        const addonModalTitle = document.getElementById('addon-modal-title');
+        const addonCommentInput = document.getElementById('addon-comment-input');
 
         // --- MENU FUNCTIONS ---
         function listenForMenu() {
@@ -203,7 +226,7 @@
                 const itemEl = document.createElement('div');
                 itemEl.className = 'bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300';
                 itemEl.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/ffffff?text=Image+Not+Found';">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/ffffff';">
                     <div class="p-4">
                         <h3 class="font-bold text-lg">${item.name}</h3>
                         <p class="text-gray-600">${Number(item.price).toFixed(2)} ဘတ်</p>
@@ -220,22 +243,55 @@
             const menuItem = menu.find(item => item.id === itemId);
             if (!menuItem) return;
 
-            const existingItem = cart.find(item => item.id === itemId);
+            if (menuItem.isAddon) {
+                showAddonModal(itemId);
+            } else {
+                const existingItem = cart.find(item => item.id === itemId && !item.comment);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ ...menuItem, quantity: 1, comment: null, cartItemId: Date.now() + Math.random() });
+                }
+                renderCart();
+            }
+        };
+
+        // --- ADD-ON MODAL FUNCTIONS ---
+        function showAddonModal(itemId) {
+            currentAddonItemId = itemId;
+            const menuItem = menu.find(item => item.id === itemId);
+            addonModalTitle.textContent = menuItem.name;
+            addonCommentInput.value = '';
+            addonModal.classList.remove('hidden');
+            addonCommentInput.focus();
+        }
+
+        window.cancelAddon = () => {
+            addonModal.classList.add('hidden');
+            currentAddonItemId = null;
+        }
+
+        window.confirmAddon = () => {
+            const comment = addonCommentInput.value.trim() || " "; // Use a space if empty to differentiate
+            const menuItem = menu.find(item => item.id === currentAddonItemId);
+
+            const existingItem = cart.find(item => item.id === currentAddonItemId && item.comment === comment);
             if (existingItem) {
                 existingItem.quantity++;
             } else {
-                cart.push({ ...menuItem, quantity: 1 });
+                cart.push({ ...menuItem, quantity: 1, comment: comment, cartItemId: Date.now() + Math.random() });
             }
             renderCart();
-        };
+            cancelAddon();
+        }
 
         // --- CART FUNCTIONS ---
-        window.adjustQuantity = (itemId, change) => {
-            const cartItem = cart.find(item => item.id === itemId);
+        window.adjustQuantity = (cartItemId, change) => {
+            const cartItem = cart.find(item => item.cartItemId == cartItemId);
             if (cartItem) {
                 cartItem.quantity += change;
                 if (cartItem.quantity <= 0) {
-                    cart = cart.filter(item => item.id !== itemId);
+                    cart = cart.filter(item => item.cartItemId != cartItemId);
                 }
             }
             renderCart();
@@ -249,15 +305,24 @@
             cart.forEach(item => {
                 const cartItemEl = document.createElement('div');
                 cartItemEl.className = 'flex justify-between items-center py-3';
+                
+                let commentHtml = '';
+                if (item.comment) {
+                    commentHtml = `<p class="text-xs text-gray-500 italic ml-2">(${item.comment})</p>`;
+                }
+
                 cartItemEl.innerHTML = `
-                    <div>
-                        <p class="font-semibold">${item.name}</p>
+                    <div class="flex-grow">
+                        <div class="flex items-center">
+                           <p class="font-semibold">${item.name}</p>
+                           ${commentHtml}
+                        </div>
                         <p class="text-sm text-gray-500">${Number(item.price).toFixed(2)} ဘတ်</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="adjustQuantity('${item.id}', -1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">-</button>
+                        <button onclick="adjustQuantity('${item.cartItemId}', -1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">-</button>
                         <span>${item.quantity}</span>
-                        <button onclick="adjustQuantity('${item.id}', 1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">+</button>
+                        <button onclick="adjustQuantity('${item.cartItemId}', 1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">+</button>
                     </div>
                 `;
                 cartItemsContainer.appendChild(cartItemEl);
@@ -285,7 +350,12 @@
 
             const order = {
                 customerName: customerName,
-                items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: Number(item.price) })),
+                items: cart.map(item => ({ 
+                    name: item.name, 
+                    quantity: item.quantity, 
+                    price: Number(item.price),
+                    comment: item.comment || null 
+                })),
                 totalPrice: cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0),
                 status: 'Pending',
                 createdAt: serverTimestamp()
