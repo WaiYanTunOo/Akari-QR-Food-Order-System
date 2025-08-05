@@ -1,1077 +1,555 @@
 <!DOCTYPE html>
-
 <html lang="my">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>ဧကရီ စားသောက်ဆိုင် - Menu</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-
+        html {
+            scroll-behavior: smooth;
+        }
         body {
-
-            font-family: 'Noto Sans Myanmar', sans-serif;
-
+            font-family: 'Inter', 'Noto Sans Myanmar', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-
         @keyframes fadeIn {
-
-            from { opacity: 0; transform: translateY(-10px); }
-
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-
         }
-
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .fade-in-animation {
-
-            animation: fadeIn 0.5s ease-out;
-
+            animation: fadeIn 0.5s ease-out forwards;
         }
-
+        .slide-in-up-animation {
+            animation: slideInUp 0.4s ease-out forwards;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
-
 </head>
-
-<body class="bg-gray-100 antialiased">
-
+<body class="bg-slate-50">
 
     <div id="app-container" class="container mx-auto p-4 max-w-7xl">
 
-
         <div id="customer-view">
-
             <header class="text-center mb-6 bg-white p-6 rounded-xl shadow-md">
-
-                 <div class="flex justify-between items-start">
-
-                    <div></div> <!-- Spacer -->
-
-                    <div class="flex-grow">
-
-                        <h1 class="text-4xl font-bold text-gray-800">ဧကရီ မုန့်ဟင်းခါး၊ ရခိုင်မုန့်တီနှင့် အသုပ်စုံဆိုင်</h1>
-
-                        <div class="mt-4 text-sm text-gray-600 space-y-2 max-w-3xl mx-auto">
-
-                            <p>ဆိုင်ထိုင်စား / ပါဆယ်ရပါတယ်။ Online Order လက်ခံပါတယ်။</p>
-
-                            <p class="font-semibold">Online Order အတွက် Bolt နဲ့ ပို့ပေးပါတယ်ရှင့်။ </p>
-
-                             <p> မုန့်ဖိုး Scan နဲ့ ကြိုရှင်းပြီး ပို့ခကို ရောက်မှ ဆိုင်ကယ်သမားကို ပေးချေရပါမည်။ </p>
-
-                                 <p>Ride details share ပေးတာကို ကြည့်ပေးပြီး ဖုန်းကိုင်ပေးပါရှင့်။</p>
-
-                            <p><span class="font-bold">ဆိုင်လိပ်စာ:</span> <a href="https://maps.app.goo.gl/brb2kXqsopb3fdJD9" target="_blank" class="text-indigo-600 hover:underline">2 Soi Ramkhamhaeng 50, Hua Mak, Bang Kapi, 10240.</a></p>
-
-                            <p>(Cha Michi အအေးဆိုင်ဘေးကပ်ရက် / ကြက်ဆီထမင်းဆိုင် မျက်စောင်းထိုး)</p>
-
-                            <p><span class="font-bold">ဆက်သွယ်ရန်:</span> <a href="https://www.facebook.com/AkariMohinga" target="_blank" class="text-indigo-600 hover:underline">Facebook Page</a> (သို့) <a href="tel:0814766169" class="text-indigo-600 hover:underline">081-476-6169</a></p>
-
-                            <p class="font-semibold text-red-500 pt-2">အသုပ်တွေက မိုးချုပ်တာနဲ့ ကုန်တတ်တာမို့ မြန်မြန်လာရောက် သုံးဆောင်ဖို့တော့ လိုပါမယ်နော်။</p>
-
-                        </div>
-
-                    </div>
-
-                    <button onclick="showOrderHistory()" class="bg-gray-200 text-gray-800 rounded-lg px-4 py-2 font-semibold hover:bg-gray-300 transition-colors whitespace-nowrap">မှာကြားမှု မှတ်တမ်း</button>
-
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800">ဧကရီ မုန့်ဟင်းခါး၊ ရခိုင်မုန့်တီနှင့် အသုပ်စုံ</h1>
+                <div class="mt-4 text-sm text-gray-600 space-y-2 max-w-3xl mx-auto">
+                    <p>ဆိုင်ထိုင်စား / ပါဆယ်ရပါတယ်။ Online Order လက်ခံပါတယ်။</p>
+                    <p class="font-semibold">Online Order အတွက် Bolt နဲ့ ပို့ပေးပါတယ်ရှင့်။ မုန့်ဖိုး Scan နဲ့ ကြိုရှင်းပြီး ပို့ခကို ရောက်မှ ဆိုင်ကယ်သမားကို ပေးချေရပါမည်။</p>
+                    <p><span class="font-bold">ဆိုင်လိပ်စာ:</span> <a href="https://maps.app.goo.gl/brb2kXqsopb3fdJD9" target="_blank" class="text-indigo-600 hover:underline">2 Soi Ramkhamhaeng 50, Hua Mak, Bang Kapi, 10240.</a></p>
+                    <p><span class="font-bold">ဆက်သွယ်ရန်:</span> <a href="https://www.facebook.com/AkariMohinga" target="_blank" class="text-indigo-600 hover:underline">Facebook Page</a> | <a href="tel:0814766169" class="text-indigo-600 hover:underline">081-476-6169</a></p>
                 </div>
-
             </header>
 
+            <div id="active-orders-container" class="space-y-4 mb-6"></div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
-
-                <div id="menu-items" class="md:col-span-7 space-y-8">
-
-                    <!-- Menu categories and items will be dynamically inserted here -->
-
-                     <p id="menu-loading-msg" class="col-span-full text-center text-gray-500">မီနူးကို ဖွင့်နေသည်...</p>
-
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div id="menu-items" class="lg:col-span-7 space-y-8">
+                    <p id="menu-loading-msg" class="col-span-full text-center text-gray-500 py-10">မီနူးကို ဖွင့်နေသည်...</p>
                 </div>
 
-
-                <div class="md:col-span-5">
-
-                    <div class="bg-white rounded-xl shadow-lg p-6 sticky top-8">
-
-                        
-
-                        <div id="active-orders-container" class="space-y-4 mb-6">
-
-                            <!-- Active order statuses will be rendered here -->
-
-                        </div>
-
-
-                        <div id="cart-view">
-
-                            <h2 class="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">သင်၏ အော်ဒါအသစ်</h2>
-
-                            <div class="mb-4">
-
-                                <label for="customer-name" class="block text-sm font-medium text-gray-700">နာမည် (လိုအပ်သည်)</label>
-
-                                <input type="text" id="customer-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="ဥပမာ - မောင်မောင်">
-
-                            </div>
-
-                            <div class="mb-4">
-
-                                <label for="customer-phone" class="block text-sm font-medium text-gray-700">ဖုန်းနံပါတ်</label>
-
-                                <input type="tel" id="customer-phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="ဥပမာ - 081-xxx-xxxx">
-
-                            </div>
-
-                            <div class="mb-4">
-
-                                <label for="customer-address" class="block text-sm font-medium text-gray-700">လိပ်စာ (Online Order အတွက်)</label>
-
-                                <textarea id="customer-address" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="အိမ်နံပါတ်၊ လမ်း၊ မြို့နယ်"></textarea>
-
-                            </div>
-
-                            <div id="cart-items" class="divide-y divide-gray-200 max-h-64 overflow-y-auto">
-
-                                 <p id="cart-empty-msg" class="text-gray-500 text-center py-8">သင်၏ ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။</p>
-
-                            </div>
-
-                            <div class="mt-6 border-t pt-4">
-
-                                <div class="flex justify-between items-center text-lg font-bold">
-
-                                    <span>စုစုပေါင်း:</span>
-
-                                    <span id="cart-total">฿0.00</span>
-
-                                </div>
-
-                                <button id="place-order-btn" onclick="placeOrder()" class="w-full bg-indigo-600 text-white rounded-lg py-3 mt-4 font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
-
-                                    အော်ဒါတင်မည်
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
+                <div class="lg:col-span-5 hidden lg:block">
+                    <div id="desktop-cart-wrapper" class="bg-white rounded-xl shadow-lg p-6 sticky top-8">
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-        
-
-        <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-            <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center">
-
-                <p id="modal-message" class="text-lg mb-6"></p>
-
-                <button onclick="closeModal()" class="bg-indigo-600 text-white rounded-lg px-6 py-2 font-semibold hover:bg-indigo-700 transition-colors">ပိတ်မည်</button>
-
-            </div>
-
-        </div>
-
-        
-
-        <div id="addon-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-            <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto">
-
-                <h3 id="addon-modal-title" class="text-lg font-bold mb-4 text-center"></h3>
-
-                <p class="text-sm text-gray-600 mb-4 text-center">ဘယ်ဟင်းထဲ ထည့်မလဲ။ (ဥပမာ - မုန့်ဟင်းခါး)</p>
-
-                <input type="text" id="addon-comment-input" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm mb-4">
-
-                <div class="flex justify-end gap-4 mt-6">
-
-                    <button onclick="cancelAddon()" class="bg-gray-200 text-gray-800 rounded-lg px-6 py-2 font-semibold hover:bg-gray-300 transition-colors">မထည့်တော့ပါ</button>
-
-                    <button onclick="confirmAddon()" class="bg-indigo-600 text-white rounded-lg px-6 py-2 font-semibold hover:bg-indigo-700 transition-colors">ထည့်မည်</button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div id="history-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-
-            <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg mx-auto">
-
-                <div class="flex justify-between items-center border-b pb-3 mb-4">
-
-                    <h2 class="text-2xl font-bold text-gray-800">မှာကြားမှု မှတ်တမ်း</h2>
-
-                    <button onclick="closeHistoryModal()" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
-
-                </div>
-
-                <div id="history-list" class="max-h-96 overflow-y-auto space-y-4">
-
-                    <!-- History items will be rendered here -->
-
-                </div>
-
-            </div>
-
-        </div>
-
-
     </div>
 
+    <div id="mobile-cart-fab" class="lg:hidden fixed bottom-6 right-6 z-30">
+        <button onclick="toggleMobileCart(true)" class="bg-indigo-600 text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span id="mobile-cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center border-2 border-white">0</span>
+        </button>
+    </div>
+
+    <div id="mobile-cart-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40">
+        <div id="mobile-cart-content" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl h-[90vh] slide-in-up-animation flex flex-col">
+        </div>
+    </div>
+    
+    <template id="cart-template">
+        <div class="flex flex-col h-full">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-2xl font-bold text-gray-800">သင်၏ အော်ဒါ</h2>
+                <button class="close-cart-btn text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            
+            <div class="p-4 space-y-4">
+                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Order Type</label>
+                    <div class="flex gap-2">
+                        <button class="order-type-btn flex-1 bg-indigo-100 text-indigo-800 ring-2 ring-indigo-500 rounded-lg py-2 font-semibold" data-type="Dine-in">Dine-in</button>
+                        <button class="order-type-btn flex-1 bg-white text-gray-700 rounded-lg py-2 font-semibold border" data-type="Delivery">Delivery</button>
+                    </div>
+                </div>
+                <div>
+                    <label for="customer-name" class="block text-sm font-medium text-gray-700">နာမည် (လိုအပ်သည်)</label>
+                    <input type="text" id="customer-name" class="customer-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="ဥပမာ - မောင်မောင်">
+                </div>
+                <div>
+                    <label for="customer-phone" class="block text-sm font-medium text-gray-700">ဖုန်းနံပါတ်</label>
+                    <input type="tel" id="customer-phone" class="customer-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="ဥပမာ - 081-xxx-xxxx">
+                </div>
+                <div class="delivery-field hidden">
+                    <label for="customer-address" class="block text-sm font-medium text-gray-700">လိပ်စာ (Online Order အတွက်)</label>
+                    <textarea id="customer-address" rows="2" class="customer-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="အိမ်နံပါတ်၊ လမ်း၊ မြို့နယ်"></textarea>
+                </div>
+            </div>
+
+            <div id="cart-items" class="flex-grow p-4 overflow-y-auto no-scrollbar divide-y divide-gray-200">
+                <p id="cart-empty-msg" class="text-gray-500 text-center py-8">သင်၏ ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။</p>
+            </div>
+
+            <div class="p-4 mt-auto border-t bg-white">
+                <div class="flex justify-between items-center text-lg font-bold mb-4">
+                    <span>စုစုပေါင်း:</span>
+                    <span id="cart-total">฿0.00</span>
+                </div>
+                <button id="place-order-btn" class="w-full bg-indigo-600 text-white rounded-lg py-3 font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+                    အော်ဒါတင်မည်
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center fade-in-animation">
+            <p id="modal-message" class="text-lg mb-6"></p>
+            <button onclick="closeModal()" class="bg-indigo-600 text-white rounded-lg px-6 py-2 font-semibold hover:bg-indigo-700 transition-colors">ပိတ်မည်</button>
+        </div>
+    </div>
 
     <script type="module">
-
-        // Firebase Imports
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // Securely load Firebase config from environment variables
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "YOUR_FALLBACK_API_KEY", // This is a placeholder and will not work
+                authDomain: "akari-qr-order-system.firebaseapp.com",
+                projectId: "akari-qr-order-system",
+                storageBucket: "akari-qr-order-system.appspot.com",
+                messagingSenderId: "646414842831",
+                appId: "1:646414842831:web:0b76fc26030ba"
+              };
 
-        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-
-        // --- CONFIGURATION ---
-
-        const firebaseConfig = {
-
-          apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
-
-          authDomain: "akari-qr-order-system.firebaseapp.com",
-
-          projectId: "akari-qr-order-system",
-
-          storageBucket: "akari-qr-order-system.appspot.com",
-
-          messagingSenderId: "646414842831",
-
-          appId: "1:646414842831:web:0b76fc26030ba",
-
-          measurementId: "G-VWBWZ2NHK9"
-
-        };
-
-        
-
-        // --- Hardcoded Default Menu ---
-
-        const defaultMenu = [
-
-            { id: 'mohinga', name: 'မုန့်ဟင်းခါး', price: 40, image: '/menu/mohinga.jpg', category: 'အဓိကဟင်းလျာများ' },
-
-            { id: 'rakhine-mont-ti', name: 'ရခိုင်မုန့်တီ', price: 30, image: '/menu/Rmot_ti_soup.jpg', category: 'အဓိကဟင်းလျာများ' },
-
-            { id: 'wheat-noodle-salad', name: 'ခေါက်ဆွဲသုပ်', price: 40, image: '/menu/wheat_noodle_salad.jpg', category: 'အသုပ်များ' },
-
-            { id: 'glass-noodle-salad', name: 'ကြာဇံသုပ်', price: 40, image: '/menu/glass_noodle_salad.jpg', category: 'အသုပ်များ' },
-
-            { id: 'rice-noodle-salad', name: 'မုန့်ဖတ်သုပ်', price: 40, image: '/menu/Rmot_ti.jpg', category: 'အသုပ်များ' },
-
-            { id: 'mixed-salad', name: 'အစုံသုပ်', price: 40, image: '/menu/mixed_salad.jpg', category: 'အသုပ်များ' },
-
-            { id: 'fish-cake-salad', name: 'ငါးဖယ်သုပ်', price: 40, image: '/menu/fish_cake_salad.jpg', category: 'အသုပ်များ' },
-
-            { id: 'tofu-salad', name: 'ပဲပြားသုပ်', price: 40, image: '/menu/tofu_salad.jpg', category: 'အသုပ်များ' },
-
-            { id: 'papaya-salad-slide', name: 'သင်္ဘောသီးအပြားသုပ်', price: 40, image: '/menu/papaya_slide.jpg', category: 'အသုပ်များ' },
-
-            { id: 'papaya-salad', name: 'သင်္ဘောသီးသုပ်', price: 40, image: '/menu/papaya.jpg', category: 'အသုပ်များ' },
-
-            { id: 'stuffed-tofu', name: 'ပဲပြားအဆာသွတ်', price: 40, image: '/menu/stuffed_tofu.jpg', category: 'အဆာသွတ်များ' },
-
-            { id: 'stuffed-fish-cake', name: 'ငါးဖယ်အဆာသွတ်', price: 40, image: '/menu/stuffed_fish_cake.jpg', category: 'အဆာသွတ်များ' },
-
-            { id: 'pea-fritters', name: 'ပဲကြော်', price: 10, image: '/menu/pea_fritters.jpg', isAddon: true, category: 'အပိုထပ်ထည့်စရာများ' },
-
-            { id: 'fish-cake', name: 'ငါးဖယ်', price: 10, image: '/menu/fish_cake.jpg', isAddon: true, category: 'အပိုထပ်ထည့်စရာများ' },
-
-            { id: 'century-egg', name: 'အိုးဘဲဥ', price: 15, image: '/menu/century_egg.jpg', isAddon: true, category: 'အပိုထပ်ထည့်စရာများ' },
-
-            { id: 'shark', name: 'Shark', price: 30, image: '/menu/shark_drink.jpg', category: 'အအေးများ' },
-
-            { id: 'kyaw-sein', name: 'ကျွဲစိမ်း', price: 30, image: '/menu/kyaw_sein_drink.jpg', category: 'အအေးများ' },
-
-            { id: 'speed', name: 'Speed', price: 20, image: '/menu/speed_drink.jpg', category: 'အအေးများ' },
-
-            { id: 'veve', name: 'VeVe', price: 20, image: '/menu/veve_drink.jpg', category: 'အအေးများ' },
-
-            { id: 'rocker', name: 'Rocker', price: 20, image: '/menu/rocker_drink.jpg', category: 'အအေးများ' },
-
-            { id: 'water', name: 'ရေသန့်', price: 5, image: '/menu/water.jpg', category: 'အအေးများ' },
-
-        ];
-
-        
-
-        const categoryOrder = ['အဓိကဟင်းလျာများ', 'အသုပ်များ', 'အဆာသွတ်များ', 'အပိုထပ်ထည့်စရာများ', 'အအေးများ'];
-
-
-        // --- STATE ---
-
-        let menu = []; 
-
-        let cart = [];
-
+        let app, auth, db;
+        let ordersCollectionRef, menuCollectionRef;
         let activeOrderListeners = {};
 
-        let currentAddonItemId = null;
-
-
-        // --- FIREBASE INITIALIZATION ---
-
-        let app, auth, db, ordersCollectionRef, menuCollectionRef;
-
         try {
-
             app = initializeApp(firebaseConfig);
-
             auth = getAuth(app);
-
             db = getFirestore(app);
-
             setLogLevel('debug'); 
 
-
+            // Correct, simple paths for collections
             ordersCollectionRef = collection(db, "orders");
-
             menuCollectionRef = collection(db, "menu");
-
         } catch (error) {
-
             console.error("Firebase initialization failed:", error);
-
-            showModal("Could not connect to the ordering service. Please try again later.");
-
+            showModal("Could not connect to the service. Please refresh.");
         }
 
-        
-
-        // --- DOM ELEMENTS ---
+        let menu = [];
+        let cart = [];
+        let orderType = 'Dine-in';
+        const categoryOrder = ['အဓိကဟင်းလျာများ', 'အသုပ်များ', 'အဆာသွတ်များ', 'အပိုထပ်ထည့်စရာများ', 'အအေးများ'];
 
         const menuItemsContainer = document.getElementById('menu-items');
-
-        const cartItemsContainer = document.getElementById('cart-items');
-
-        const cartTotalEl = document.getElementById('cart-total');
-
-        const placeOrderBtn = document.getElementById('place-order-btn');
-
-        const cartEmptyMsg = document.getElementById('cart-empty-msg');
-
         const menuLoadingMsg = document.getElementById('menu-loading-msg');
-
         const activeOrdersContainer = document.getElementById('active-orders-container');
-
-        const addonModal = document.getElementById('addon-modal');
-
-        const addonModalTitle = document.getElementById('addon-modal-title');
-
-        const addonCommentInput = document.getElementById('addon-comment-input');
-
-        const historyModal = document.getElementById('history-modal');
-
-        const historyList = document.getElementById('history-list');
-
-
-        // --- MENU FUNCTIONS ---
-
-        function listenForMenu() {
-
-            onSnapshot(menuCollectionRef, (snapshot) => {
-
-                const menuMap = new Map();
-
-                defaultMenu.forEach(item => menuMap.set(item.id, item));
-
-                snapshot.docs.forEach(doc => {
-
-                    menuMap.set(doc.id, { id: doc.id, ...doc.data() });
-
-                });
-
-                menu = Array.from(menuMap.values());
-
-                renderMenu();
-
-            }, (error) => {
-
-                console.error("Error listening to menu:", error);
-
-                menu = [...defaultMenu];
-
-                renderMenu();
-
-                if(menuLoadingMsg) menuLoadingMsg.textContent = "Could not load extra items. Showing default menu.";
-
-            });
-
-        }
-
-
-        function renderMenu() {
-
-            if (!menuItemsContainer) return;
-
-            menuItemsContainer.innerHTML = '';
-
-            
-
-            if (menu.length === 0) {
-
-                menuItemsContainer.innerHTML = '<p class="col-span-full text-center text-gray-500">Menu is currently empty.</p>';
-
-                return;
-
-            }
-
-
-            categoryOrder.forEach(category => {
-
-                const itemsInCategory = menu.filter(item => item.category === category);
-
-                if (itemsInCategory.length > 0) {
-
-                    const categorySection = document.createElement('div');
-
-                    categorySection.className = 'col-span-full';
-
-                    
-
-                    const categoryTitle = document.createElement('h2');
-
-                    categoryTitle.className = 'text-2xl font-bold text-gray-800 mb-4';
-
-                    categoryTitle.textContent = category;
-
-                    
-
-                    const itemsGrid = document.createElement('div');
-
-                    itemsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6';
-
-
-                    itemsInCategory.forEach(item => {
-
-                        const itemEl = document.createElement('div');
-
-                        itemEl.className = 'bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300';
-
-                        itemEl.innerHTML = `
-
-                            <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/cccccc/ffffff?text=No+Image';">
-
-                            <div class="p-4">
-
-                                <h3 class="font-bold text-lg">${item.name}</h3>
-
-                                <p class="text-gray-600">${Number(item.price).toFixed(2)} ဘတ်</p>
-
-                                <button onclick="addToCart('${item.id}')" class="mt-3 w-full bg-indigo-100 text-indigo-700 font-semibold py-2 rounded-lg hover:bg-indigo-200 transition-colors">
-
-                                    ထည့်မည်
-
-                                </button>
-
-                            </div>
-
-                        `;
-
-                        itemsGrid.appendChild(itemEl);
-
-                    });
-
-                    
-
-                    categorySection.appendChild(categoryTitle);
-
-                    categorySection.appendChild(itemsGrid);
-
-                    menuItemsContainer.appendChild(categorySection);
-
-                }
-
-            });
-
-        }
-
-
-        window.addToCart = (itemId) => {
-
-            const menuItem = menu.find(item => item.id === itemId);
-
-            if (!menuItem) return;
-
-
-            if (menuItem.isAddon) {
-
-                showAddonModal(itemId);
-
-            } else {
-
-                const existingItem = cart.find(item => item.id === itemId && !item.comment);
-
-                if (existingItem) {
-
-                    existingItem.quantity++;
-
-                } else {
-
-                    cart.push({ ...menuItem, quantity: 1, comment: null, cartItemId: Date.now() + Math.random() });
-
-                }
-
-                renderCart();
-
-            }
-
-        };
-
-
-        // --- ADD-ON MODAL FUNCTIONS ---
-
-        function showAddonModal(itemId) {
-
-            currentAddonItemId = itemId;
-
-            const menuItem = menu.find(item => item.id === itemId);
-
-            addonModalTitle.textContent = menuItem.name;
-
-            addonCommentInput.value = '';
-
-            addonModal.classList.remove('hidden');
-
-            addonCommentInput.focus();
-
-        }
-
-
-        window.cancelAddon = () => {
-
-            addonModal.classList.add('hidden');
-
-            currentAddonItemId = null;
-
-        }
-
-
-        window.confirmAddon = () => {
-
-            const comment = addonCommentInput.value.trim() || " "; // Use a space if empty to differentiate
-
-            const menuItem = menu.find(item => item.id === currentAddonItemId);
-
-
-            const existingItem = cart.find(item => item.id === currentAddonItemId && item.comment === comment);
-
-            if (existingItem) {
-
-                existingItem.quantity++;
-
-            } else {
-
-                cart.push({ ...menuItem, quantity: 1, comment: comment, cartItemId: Date.now() + Math.random() });
-
-            }
-
-            renderCart();
-
-            cancelAddon();
-
-        }
-
-
-        // --- CART FUNCTIONS ---
-
-        window.adjustQuantity = (cartItemId, change) => {
-
-            const cartItem = cart.find(item => item.cartItemId == cartItemId);
-
-            if (cartItem) {
-
-                cartItem.quantity += change;
-
-                if (cartItem.quantity <= 0) {
-
-                    cart = cart.filter(item => item.cartItemId != cartItemId);
-
-                }
-
-            }
-
-            renderCart();
-
-        }
-
-
-        function renderCart() {
-
-            if (!cartItemsContainer) return;
-
-            cartEmptyMsg.classList.toggle('hidden', cart.length > 0);
-
-            cartItemsContainer.innerHTML = '';
-
-            
-
-            cart.forEach(item => {
-
-                const cartItemEl = document.createElement('div');
-
-                cartItemEl.className = 'flex justify-between items-center py-3';
-
-                
-
-                let commentHtml = '';
-
-                if (item.comment) {
-
-                    commentHtml = `<p class="text-xs text-gray-500 italic ml-2">(${item.comment})</p>`;
-
-                }
-
-
-                cartItemEl.innerHTML = `
-
-                    <div class="flex-grow">
-
-                        <div class="flex items-center">
-
-                           <p class="font-semibold">${item.name}</p>
-
-                           ${commentHtml}
-
-                        </div>
-
-                        <p class="text-sm text-gray-500">${Number(item.price).toFixed(2)} ဘတ်</p>
-
-                    </div>
-
-                    <div class="flex items-center gap-2">
-
-                        <button onclick="adjustQuantity('${item.cartItemId}', -1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">-</button>
-
-                        <span>${item.quantity}</span>
-
-                        <button onclick="adjustQuantity('${item.cartItemId}', 1)" class="w-6 h-6 rounded-full bg-gray-200 text-gray-700 font-bold">+</button>
-
-                    </div>
-
-                `;
-
-                cartItemsContainer.appendChild(cartItemEl);
-
-            });
-
-
-            const total = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
-
-            cartTotalEl.textContent = `฿${total.toFixed(2)}`;
-
-            placeOrderBtn.disabled = cart.length === 0;
-
-        }
-
-
-        window.placeOrder = async () => {
-
-            const nameInput = document.getElementById('customer-name');
-
-            const phoneInput = document.getElementById('customer-phone');
-
-            const addressInput = document.getElementById('customer-address');
-
-
-            const customerName = nameInput.value.trim();
-
-            const customerPhone = phoneInput.value.trim();
-
-            const customerAddress = addressInput.value.trim();
-
-
-            if (!customerName) {
-
-                showModal("ကျေးဇူးပြု၍ နာမည်ဖြည့်ပေးပါ။");
-
-                return;
-
-            }
-
-            if (cart.length === 0) {
-
-                showModal("သင်၏ ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။");
-
-                return;
-
-            }
-
-
-            placeOrderBtn.disabled = true;
-
-            placeOrderBtn.textContent = 'အော်ဒါတင်နေသည်...';
-
-
-            const order = {
-
-                customerName: customerName,
-
-                customerPhone: customerPhone,
-
-                customerAddress: customerAddress,
-
-                items: cart.map(item => ({ 
-
-                    name: item.name, 
-
-                    quantity: item.quantity, 
-
-                    price: Number(item.price),
-
-                    comment: item.comment || null 
-
-                })),
-
-                totalPrice: cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0),
-
-                status: 'Pending',
-
-                createdAt: serverTimestamp()
-
-            };
-
-
-            try {
-
-                const docRef = await addDoc(ordersCollectionRef, order);
-
-                showModal("အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်!");
-
-                
-
-                const activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
-
-                activeOrderIds.push(docRef.id);
-
-                localStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
-
-                
-
-                localStorage.setItem('customerName', customerName);
-
-                localStorage.setItem('customerPhone', customerPhone);
-
-                localStorage.setItem('customerAddress', customerAddress);
-
-
-                cart = [];
-
-                renderCart();
-
-                listenForAllActiveOrders();
-
-            } catch (error) {
-
-                console.error("Error placing order: ", error);
-
-                showModal("အော်ဒါတင်ရာတွင် အမှားအယွင်း ဖြစ်ပွားပါသည်။");
-
-            } finally {
-
-                placeOrderBtn.disabled = false;
-
-                placeOrderBtn.textContent = 'အော်ဒါတင်မည်';
-
-            }
-
-        };
-
-
-        // --- ORDER STATUS & HISTORY FUNCTIONS ---
-
-        function listenForAllActiveOrders() {
-
-            const activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
-
-            if (activeOrderIds.length > 0 && !activeOrdersContainer.querySelector('h2')) {
-
-                 const header = document.createElement('h2');
-
-                 header.className = "text-2xl font-bold text-gray-800 border-b pb-3 mb-2";
-
-                 header.textContent = "သင်၏ လက်ရှိအော်ဒါများ";
-
-                 activeOrdersContainer.prepend(header);
-
-            }
-
-
-            activeOrderIds.forEach(orderId => {
-
-                if (!activeOrderListeners[orderId]) {
-
-                    listenForSingleOrderStatus(orderId);
-
-                }
-
-            });
-
-        }
-
-
-        function listenForSingleOrderStatus(orderId) {
-
-            const orderRef = doc(db, "orders", orderId);
-
-            activeOrderListeners[orderId] = onSnapshot(orderRef, (doc) => {
-
-                if (doc.exists()) {
-
-                    const orderData = doc.data();
-
-                    if (orderData.status === 'Completed') {
-
-                        removeActiveOrder(orderId);
-
-                    } else {
-
-                        renderOrUpdateStatusBox(orderId, orderData);
-
-                    }
-
-                } else {
-
-                    removeActiveOrder(orderId);
-
-                }
-
-            });
-
-        }
-
-
-        function renderOrUpdateStatusBox(orderId, orderData) {
-
-            let statusBox = document.getElementById(`status-box-${orderId}`);
-
-            if (!statusBox) {
-
-                statusBox = document.createElement('div');
-
-                statusBox.id = `status-box-${orderId}`;
-
-                statusBox.className = 'p-4 border rounded-lg bg-gray-50 fade-in-animation';
-
-                activeOrdersContainer.appendChild(statusBox);
-
-            }
-
-            
-
-            const status = orderData.status;
-
-            let statusDisplay = { text: status, color: 'text-gray-700' };
-
-
-            if (status === 'Pending') statusDisplay = { text: 'စောင့်ဆိုင်းနေသည်', color: 'text-red-500' };
-
-            if (status === 'Preparing') statusDisplay = { text: 'ပြင်ဆင်နေသည်...', color: 'text-yellow-500' };
-
-            if (status === 'Ready') statusDisplay = { text: 'အသင့်ဖြစ်ပါပြီ!', color: 'text-green-500' };
-
-            
-
-            statusBox.innerHTML = `
-
-                <p class="font-semibold text-gray-700">${orderData.customerName} ၏ အော်ဒါ</p>
-
-                <p class="font-bold text-xl ${statusDisplay.color}">${statusDisplay.text}</p>
-
-            `;
-
-        }
-
-
-        function removeActiveOrder(orderId) {
-
-            if (activeOrderListeners[orderId]) {
-
-                activeOrderListeners[orderId]();
-
-                delete activeOrderListeners[orderId];
-
-            }
-
-            const statusBox = document.getElementById(`status-box-${orderId}`);
-
-            if (statusBox) statusBox.remove();
-
-            
-
-            let activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
-
-            activeOrderIds = activeOrderIds.filter(id => id !== orderId);
-
-            localStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
-
-
-            if (activeOrderIds.length === 0) {
-
-                 const header = activeOrdersContainer.querySelector('h2');
-
-                 if (header) header.remove();
-
-            }
-
-        }
-
-        
-
-        window.showOrderHistory = async () => {
-
-            const allOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
-
-            historyList.innerHTML = '<p>Loading history...</p>';
-
-            historyModal.classList.remove('hidden');
-
-
-            if (allOrderIds.length === 0) {
-
-                historyList.innerHTML = '<p>မှာကြားမှု မှတ်တမ်း မရှိသေးပါ။</p>';
-
-                return;
-
-            }
-
-
-            const orderPromises = allOrderIds.map(id => getDoc(doc(db, "orders", id)));
-
-            const orderSnapshots = await Promise.all(orderPromises);
-
-
-            historyList.innerHTML = '';
-
-            orderSnapshots.reverse().forEach(docSnap => {
-
-                if (docSnap.exists()) {
-
-                    const order = docSnap.data();
-
-                    const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString() : 'N/A';
-
-                    const itemsHtml = order.items.map(item => `<li>${item.quantity} x ${item.name}</li>`).join('');
-
-                    
-
-                    const historyItemEl = document.createElement('div');
-
-                    historyItemEl.className = 'p-4 border rounded-lg';
-
-                    historyItemEl.innerHTML = `
-
-                        <div class="flex justify-between items-center">
-
-                            <p class="font-bold">${order.customerName}</p>
-
-                            <p class="text-sm text-gray-500">${orderDate}</p>
-
-                        </div>
-
-                        <ul class="list-disc list-inside text-sm my-2">${itemsHtml}</ul>
-
-                        <p class="text-right font-bold mt-2">Total: ฿${order.totalPrice.toFixed(2)}</p>
-
-                    `;
-
-                    historyList.appendChild(historyItemEl);
-
-                }
-
-            });
-
-        }
-
-
-        window.closeHistoryModal = () => {
-
-            historyModal.classList.add('hidden');
-
-        }
-
-
-        window.showModal = (message) => { document.getElementById('modal-message').textContent = message; document.getElementById('message-modal').classList.remove('hidden'); }
-
-        window.closeModal = () => { document.getElementById('message-modal').classList.add('hidden'); }
-
-
-        // --- AUTHENTICATION & INITIALIZATION ---
-
-        onAuthStateChanged(auth, (user) => {
-
+        const mobileCartFab = document.getElementById('mobile-cart-fab');
+        const mobileCartModal = document.getElementById('mobile-cart-modal');
+        const desktopCartWrapper = document.getElementById('desktop-cart-wrapper');
+        const mobileCartContent = document.getElementById('mobile-cart-content');
+
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-
                 initApp();
-
             } else {
-
-                signInAnonymously(auth).catch((error) => {
-
-                    console.error("Anonymous sign-in failed:", error);
-
-                    showModal("Could not connect to the ordering service.");
-
-                });
-
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Authentication failed:", error.code, error.message);
+                    showModal("Authentication Error. Please try again later.");
+                }
             }
-
         });
 
-
         function initApp() {
-
-            listenForMenu();
-
-            listenForAllActiveOrders();
-
+            setupCartUI();
+            loadState();
             renderCart();
-
-            
-
-            document.getElementById(
-
-'customer-name').value = localStorage.getItem('customerName') || '';
-
-            document.getElementById('customer-phone').value = localStorage.getItem('customerPhone') || '';
-
-            document.getElementById('customer-address').value = localStorage.getItem('customerAddress') || '';
-
+            listenForMenu();
+            listenForAllActiveOrders();
         }
 
+        async function listenForMenu() {
+            try {
+                // Use onSnapshot for real-time menu updates
+                onSnapshot(menuCollectionRef, (snapshot) => {
+                    menu = [];
+                    snapshot.docs.forEach(doc => {
+                        menu.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderMenu();
+                });
+            } catch (error) {
+                console.error("Error fetching menu:", error);
+                menuLoadingMsg.textContent = "Could not load menu. Please check your connection and try again.";
+            }
+        }
+
+        function renderMenu() {
+            menuItemsContainer.innerHTML = '';
+            if (menu.length === 0) {
+                menuLoadingMsg.classList.remove('hidden');
+                menuLoadingMsg.textContent = "Menu is currently unavailable.";
+                return;
+            }
+            menuLoadingMsg.classList.add('hidden');
+
+            categoryOrder.forEach(category => {
+                const itemsInCategory = menu.filter(item => item.category === category);
+                if (itemsInCategory.length > 0) {
+                    const categorySection = document.createElement('div');
+                    categorySection.innerHTML = `<h2 class="text-2xl font-bold text-gray-800 mb-4">${category}</h2>`;
+                    const itemsGrid = document.createElement('div');
+                    itemsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-6';
+                    
+                    itemsInCategory.forEach(item => {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300 flex flex-col';
+                        itemEl.innerHTML = `
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/64748b?text=No+Image';">
+                            <div class="p-4 flex flex-col flex-grow">
+                                <h3 class="font-bold text-lg">${item.name}</h3>
+                                <p class="text-gray-600">${Number(item.price).toFixed(2)} ဘတ်</p>
+                                <button onclick="addToCart('${item.id}')" class="mt-3 w-full bg-indigo-100 text-indigo-700 font-semibold py-2 rounded-lg hover:bg-indigo-200 transition-colors mt-auto">
+                                    ထည့်မည်
+                                </button>
+                            </div>`;
+                        itemsGrid.appendChild(itemEl);
+                    });
+                    categorySection.appendChild(itemsGrid);
+                    menuItemsContainer.appendChild(categorySection);
+                }
+            });
+        }
+
+        window.addToCart = (itemId) => {
+            const menuItem = menu.find(item => item.id === itemId);
+            if (!menuItem) return;
+            const existingItem = cart.find(item => item.id === itemId);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...menuItem, quantity: 1 });
+            }
+            showFeedback(`${menuItem.name} added to cart!`);
+            renderCart();
+        };
+
+        window.adjustQuantity = (itemId, change) => {
+            const cartItem = cart.find(item => item.id === itemId);
+            if (cartItem) {
+                cartItem.quantity += change;
+                if (cartItem.quantity <= 0) {
+                    cart = cart.filter(item => item.id !== itemId);
+                }
+            }
+            renderCart();
+        }
+
+        function setupCartUI() {
+            const cartTemplate = document.getElementById('cart-template').content.cloneNode(true);
+            desktopCartWrapper.innerHTML = '';
+            desktopCartWrapper.appendChild(cartTemplate);
+            
+            const mobileCartTemplate = document.getElementById('cart-template').content.cloneNode(true);
+            mobileCartContent.innerHTML = '';
+            mobileCartContent.appendChild(mobileCartTemplate);
+
+            document.querySelectorAll('.close-cart-btn').forEach(btn => btn.onclick = () => toggleMobileCart(false));
+            document.querySelectorAll('#place-order-btn').forEach(btn => btn.onclick = placeOrder);
+            document.querySelectorAll('.customer-input').forEach(input => input.oninput = saveState);
+            document.querySelectorAll('.order-type-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    orderType = e.target.dataset.type;
+                    document.querySelectorAll('.order-type-btn').forEach(b => {
+                        b.classList.remove('bg-indigo-100', 'text-indigo-800', 'ring-2', 'ring-indigo-500');
+                        b.classList.add('bg-white', 'text-gray-700', 'border');
+                    });
+                    e.target.classList.add('bg-indigo-100', 'text-indigo-800', 'ring-2', 'ring-indigo-500');
+                    e.target.classList.remove('bg-white', 'text-gray-700', 'border');
+                    
+                    document.querySelectorAll('.delivery-field').forEach(field => {
+                        field.classList.toggle('hidden', orderType !== 'Delivery');
+                    });
+                    saveState();
+                };
+            });
+        }
+
+        function renderCart() {
+            const total = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            document.querySelectorAll('#cart-items').forEach(container => {
+                container.innerHTML = '';
+                const emptyMsg = container.parentElement.querySelector('#cart-empty-msg');
+                if (cart.length === 0) {
+                    if (emptyMsg) emptyMsg.classList.remove('hidden');
+                } else {
+                    if (emptyMsg) emptyMsg.classList.add('hidden');
+                    cart.forEach(item => {
+                        const cartItemEl = document.createElement('div');
+                        cartItemEl.className = 'flex justify-between items-center py-3';
+                        cartItemEl.innerHTML = `
+                            <div class="flex-grow">
+                                <p class="font-semibold">${item.name}</p>
+                                <p class="text-sm text-gray-500">${Number(item.price).toFixed(2)} ဘတ်</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="adjustQuantity('${item.id}', -1)" class="w-7 h-7 rounded-full bg-gray-200 text-gray-700 font-bold flex items-center justify-center">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="adjustQuantity('${item.id}', 1)" class="w-7 h-7 rounded-full bg-gray-200 text-gray-700 font-bold flex items-center justify-center">+</button>
+                            </div>`;
+                        container.appendChild(cartItemEl);
+                    });
+                }
+            });
+
+            document.querySelectorAll('#cart-total').forEach(el => el.textContent = `฿${total.toFixed(2)}`);
+            document.querySelectorAll('#place-order-btn').forEach(btn => btn.disabled = cart.length === 0);
+            
+            const mobileCartCount = document.getElementById('mobile-cart-count');
+            mobileCartCount.textContent = cartCount;
+            mobileCartCount.classList.toggle('hidden', cartCount === 0);
+            mobileCartFab.classList.toggle('hidden', cartCount === 0 && !mobileCartModal.classList.contains('hidden'));
+
+            saveState();
+        }
+
+        window.placeOrder = async () => {
+            const customerNameInput = document.querySelector('#desktop-cart-wrapper #customer-name') || document.querySelector('#mobile-cart-content #customer-name');
+            const customerPhoneInput = document.querySelector('#desktop-cart-wrapper #customer-phone') || document.querySelector('#mobile-cart-content #customer-phone');
+            const customerAddressInput = document.querySelector('#desktop-cart-wrapper #customer-address') || document.querySelector('#mobile-cart-content #customer-address');
+            
+            const customerName = customerNameInput.value.trim();
+
+            if (!customerName) {
+                showModal("ကျေးဇူးပြု၍ နာမည်ဖြည့်ပေးပါ။");
+                return;
+            }
+            if (cart.length === 0) {
+                showModal("သင်၏ ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။");
+                return;
+            }
+
+            const placeOrderBtns = document.querySelectorAll('#place-order-btn');
+            placeOrderBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.textContent = 'အော်ဒါတင်နေသည်...';
+            });
+
+            const order = {
+                customerName: customerName,
+                customerPhone: customerPhoneInput.value.trim(),
+                customerAddress: customerAddressInput.value.trim(),
+                orderType: orderType,
+                items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: Number(item.price) })),
+                totalPrice: cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0),
+                status: 'Pending',
+                createdAt: serverTimestamp()
+            };
+
+            try {
+                const docRef = await addDoc(ordersCollectionRef, order);
+                showModal("အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်!");
+                
+                let activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
+                activeOrderIds.push(docRef.id);
+                localStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
+                
+                cart = [];
+                renderCart();
+                listenForAllActiveOrders();
+                toggleMobileCart(false);
+            } catch (error) {
+                console.error("Error placing order: ", error);
+                showModal("အော်ဒါတင်ရာတွင် အမှားအယွင်း ဖြစ်ပွားပါသည်။");
+            } finally {
+                placeOrderBtns.forEach(btn => {
+                    btn.disabled = false;
+                    btn.textContent = 'အော်ဒါတင်မည်';
+                });
+            }
+        };
+        
+        function listenForAllActiveOrders() {
+            const activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
+            activeOrdersContainer.innerHTML = '';
+            activeOrderIds.forEach(orderId => {
+                if (!activeOrderListeners[orderId]) {
+                    listenForSingleOrderStatus(orderId);
+                }
+            });
+        }
+
+        function listenForSingleOrderStatus(orderId) {
+            const orderRef = doc(db, "orders", orderId);
+            activeOrderListeners[orderId] = onSnapshot(orderRef, (doc) => {
+                if (doc.exists()) {
+                    const orderData = doc.data();
+                    if (orderData.status === 'Completed') {
+                        removeActiveOrder(orderId);
+                    } else {
+                        renderOrUpdateStatusBox(orderId, orderData);
+                    }
+                } else {
+                    removeActiveOrder(orderId);
+                }
+            });
+        }
+
+        function renderOrUpdateStatusBox(orderId, orderData) {
+            let statusBox = document.getElementById(`status-box-${orderId}`);
+            if (!statusBox) {
+                statusBox = document.createElement('div');
+                statusBox.id = `status-box-${orderId}`;
+                statusBox.className = 'p-4 border rounded-lg bg-white shadow-sm fade-in-animation';
+                activeOrdersContainer.appendChild(statusBox);
+            }
+            
+            const status = orderData.status;
+            const statusDisplay = {
+                'Pending': { text: 'စောင့်ဆိုင်းနေသည်', color: 'text-red-500' },
+                'Preparing': { text: 'ပြင်ဆင်နေသည်...', color: 'text-yellow-500' },
+                'Ready': { text: 'အသင့်ဖြစ်ပါပြီ!', color: 'text-green-500' }
+            }[status] || { text: status, color: 'text-gray-700' };
+            
+            statusBox.innerHTML = `
+                <p class="font-semibold text-gray-700">${orderData.customerName} ၏ အော်ဒါ</p>
+                <p class="font-bold text-xl ${statusDisplay.color}">${statusDisplay.text}</p>
+            `;
+        }
+
+        function removeActiveOrder(orderId) {
+            if (activeOrderListeners[orderId]) {
+                activeOrderListeners[orderId]();
+                delete activeOrderListeners[orderId];
+            }
+            const statusBox = document.getElementById(`status-box-${orderId}`);
+            if (statusBox) statusBox.remove();
+            
+            let activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
+            activeOrderIds = activeOrderIds.filter(id => id !== orderId);
+            localStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
+        }
+
+        function saveState() {
+            const customerNameInput = document.querySelector('#desktop-cart-wrapper #customer-name') || document.querySelector('#mobile-cart-content #customer-name');
+            if (!customerNameInput) return;
+
+            const state = {
+                cart: cart,
+                orderType: orderType,
+                customerName: customerNameInput.value,
+                customerPhone: (document.querySelector('#desktop-cart-wrapper #customer-phone') || document.querySelector('#mobile-cart-content #customer-phone')).value,
+                customerAddress: (document.querySelector('#desktop-cart-wrapper #customer-address') || document.querySelector('#mobile-cart-content #customer-address')).value,
+            };
+            localStorage.setItem('customerState', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const state = JSON.parse(localStorage.getItem('customerState'));
+            if (state) {
+                cart = state.cart || [];
+                orderType = state.orderType || 'Dine-in';
+                
+                document.querySelectorAll('#customer-name').forEach(i => i.value = state.customerName || '');
+                document.querySelectorAll('#customer-phone').forEach(i => i.value = state.customerPhone || '');
+                document.querySelectorAll('#customer-address').forEach(i => i.value = state.customerAddress || '');
+
+                document.querySelectorAll('.order-type-btn').forEach(btn => {
+                    if (btn.dataset.type === orderType) {
+                        btn.click();
+                    }
+                });
+            }
+        }
+        
+        window.toggleMobileCart = (show) => {
+            if (show) {
+                mobileCartModal.classList.remove('hidden');
+                mobileCartFab.classList.add('hidden');
+            } else {
+                mobileCartModal.classList.add('hidden');
+                mobileCartFab.classList.remove('hidden');
+            }
+        }
+
+        window.showModal = (message) => {
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('message-modal').classList.remove('hidden');
+        }
+        window.closeModal = () => {
+            document.getElementById('message-modal').classList.add('hidden');
+        }
+
+        function showFeedback(message) {
+            let feedbackEl = document.getElementById('feedback-toast');
+            if (!feedbackEl) {
+                feedbackEl = document.createElement('div');
+                feedbackEl.id = 'feedback-toast';
+                feedbackEl.className = 'fixed bottom-20 right-6 bg-gray-900 text-white text-sm font-semibold py-3 px-5 rounded-lg shadow-lg z-50 fade-in-animation';
+                document.body.appendChild(feedbackEl);
+            }
+            feedbackEl.textContent = message;
+            feedbackEl.style.display = 'block';
+            setTimeout(() => {
+                feedbackEl.style.display = 'none';
+            }, 2000);
+        }
 
     </script>
-
 </body>
-
 </html>
