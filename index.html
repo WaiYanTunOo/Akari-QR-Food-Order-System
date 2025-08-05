@@ -153,11 +153,10 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Securely load Firebase config from environment variables
         const firebaseConfig = typeof __firebase_config !== 'undefined' 
             ? JSON.parse(__firebase_config)
             : {
-                apiKey: "YOUR_FALLBACK_API_KEY", // This is a placeholder and will not work
+                apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk", // This is a placeholder and will not work
                 authDomain: "akari-qr-order-system.firebaseapp.com",
                 projectId: "akari-qr-order-system",
                 storageBucket: "akari-qr-order-system.appspot.com",
@@ -175,7 +174,6 @@
             db = getFirestore(app);
             setLogLevel('debug'); 
 
-            // Correct, simple paths for collections
             ordersCollectionRef = collection(db, "orders");
             menuCollectionRef = collection(db, "menu");
         } catch (error) {
@@ -221,20 +219,17 @@
             listenForAllActiveOrders();
         }
 
-        async function listenForMenu() {
-            try {
-                // Use onSnapshot for real-time menu updates
-                onSnapshot(menuCollectionRef, (snapshot) => {
-                    menu = [];
-                    snapshot.docs.forEach(doc => {
-                        menu.push({ id: doc.id, ...doc.data() });
-                    });
-                    renderMenu();
+        function listenForMenu() {
+            onSnapshot(menuCollectionRef, (snapshot) => {
+                menu = [];
+                snapshot.docs.forEach(doc => {
+                    menu.push({ id: doc.id, ...doc.data() });
                 });
-            } catch (error) {
+                renderMenu();
+            }, (error) => {
                 console.error("Error fetching menu:", error);
                 menuLoadingMsg.textContent = "Could not load menu. Please check your connection and try again.";
-            }
+            });
         }
 
         function renderMenu() {
@@ -398,7 +393,8 @@
                 items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: Number(item.price) })),
                 totalPrice: cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0),
                 status: 'Pending',
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                creatorUid: auth.currentUser ? auth.currentUser.uid : null // Add creator's UID
             };
 
             try {
@@ -439,10 +435,12 @@
             activeOrderListeners[orderId] = onSnapshot(orderRef, (doc) => {
                 if (doc.exists()) {
                     const orderData = doc.data();
-                    if (orderData.status === 'Completed') {
-                        removeActiveOrder(orderId);
-                    } else {
-                        renderOrUpdateStatusBox(orderId, orderData);
+                    if (auth.currentUser && orderData.creatorUid === auth.currentUser.uid) {
+                        if (orderData.status === 'Completed') {
+                            removeActiveOrder(orderId);
+                        } else {
+                            renderOrUpdateStatusBox(orderId, orderData);
+                        }
                     }
                 } else {
                     removeActiveOrder(orderId);
