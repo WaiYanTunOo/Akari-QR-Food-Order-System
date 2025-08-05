@@ -45,10 +45,8 @@
 </head>
 <body class="bg-slate-100">
 
-    <!-- App Container -->
     <div id="app-container">
 
-        <!-- Login View -->
         <div id="login-view" class="flex items-center justify-center min-h-screen bg-gray-100">
             <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-lg">
                 <div>
@@ -75,10 +73,8 @@
             </div>
         </div>
 
-        <!-- Main App View -->
         <div id="main-app" class="hidden">
             <div class="flex h-screen bg-slate-100">
-                <!-- Sidebar -->
                 <aside class="w-64 bg-white shadow-md flex-shrink-0 hidden md:flex flex-col">
                     <div class="h-16 flex items-center justify-center border-b">
                         <h1 class="text-xl font-bold text-indigo-600">Order Admin</h1>
@@ -89,7 +85,7 @@
                             Dashboard
                         </a>
                         <a href="#" onclick="switchView('menu')" class="nav-link flex items-center px-4 py-2 text-gray-600 hover:bg-indigo-50 rounded-lg">
-                             <svg class="sidebar-icon mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v11.494m-9-5.747h18"></path></svg>
+                             <svg class="sidebar-icon mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                             Menu Items
                         </a>
                         <a href="#" onclick="switchView('records')" class="nav-link flex items-center px-4 py-2 text-gray-600 hover:bg-indigo-50 rounded-lg">
@@ -105,7 +101,6 @@
                     </div>
                 </aside>
 
-                <!-- Main Content -->
                 <main class="flex-1 flex flex-col overflow-hidden">
                     <header class="h-16 bg-white shadow-sm flex justify-between items-center px-6">
                         <button class="md:hidden" id="mobile-menu-button">
@@ -116,27 +111,20 @@
                     </header>
                     
                     <div class="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto custom-scrollbar">
-                        <!-- Dashboard View -->
                         <div id="dashboard-view">
                              <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                                 <div class="lg:col-span-2 xl:col-span-3">
                                     <h2 class="text-2xl font-bold mb-4 text-gray-700">Active Orders</h2>
                                 </div>
-                                <!-- Active Orders Column -->
                                 <div id="active-orders" class="space-y-4"></div>
-                                <!-- Preparing Orders Column -->
                                 <div id="preparing-orders" class="space-y-4"></div>
-                                <!-- Ready for Payment Column -->
                                 <div id="payment-due-orders" class="space-y-4"></div>
                             </div>
                         </div>
 
-                        <!-- Menu View -->
                         <div id="menu-view" class="hidden">
-                            <!-- Menu items will be rendered here -->
-                        </div>
+                            </div>
 
-                        <!-- Records View -->
                         <div id="records-view" class="hidden">
                             <div id="records-list" class="bg-white rounded-xl shadow-lg p-6 space-y-4"></div>
                         </div>
@@ -147,7 +135,6 @@
 
     </div>
 
-    <!-- Modals -->
     <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center fade-in-animation">
             <p id="modal-message" class="text-lg mb-6"></p>
@@ -173,15 +160,19 @@
                 <div class="space-y-4">
                     <div>
                         <label for="item-name" class="block text-sm font-medium text-gray-700">Item Name</label>
-                        <input type="text" id="item-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., Pad Thai">
+                        <input type="text" id="item-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., Mohinga">
                     </div>
                     <div>
                         <label for="item-price" class="block text-sm font-medium text-gray-700">Price</label>
-                        <input type="number" id="item-price" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., 120">
+                        <input type="number" id="item-price" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., 40">
                     </div>
                     <div>
                         <label for="item-image" class="block text-sm font-medium text-gray-700">Image URL</label>
-                        <input type="url" id="item-image" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://placehold.co/...">
+                        <input type="url" id="item-image" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://.../mohinga.jpg">
+                    </div>
+                     <div>
+                        <label for="item-category" class="block text-sm font-medium text-gray-700">Category</label>
+                        <input type="text" id="item-category" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., အသုပ်များ">
                     </div>
                 </div>
                 <div class="mt-8 flex justify-end gap-4">
@@ -196,7 +187,7 @@
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, setLogLevel, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONFIGURATION & INITIALIZATION ---
@@ -204,12 +195,10 @@
             apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
             authDomain: "akari-qr-order-system.firebaseapp.com",
             projectId: "akari-qr-order-system",
-            storageBucket: "akari-qr-order-system.firebasestorage.app",
+            storageBucket: "akari-qr-order-system.appspot.com",
             messagingSenderId: "646414842831",
-            appId: "1:646414842831:web:0b76fc2779b7afc26030ba",
-            measurementId: "G-VWBWZ2NHK9"
+            appId: "1:646414842831:web:0b76fc26030ba4d9a5b3fe"
         };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         let app, auth, db;
         let ordersCollectionRef, menuCollectionRef;
@@ -222,9 +211,9 @@
             db = getFirestore(app);
             setLogLevel('debug'); 
 
-            // Use paths based on app ID for multi-tenancy
-            ordersCollectionRef = collection(db, `artifacts/${appId}/public/data/orders`);
-            menuCollectionRef = collection(db, `artifacts/${appId}/public/data/menu`);
+            // CORRECTED: Use the simple, top-level collection paths to match the customer app
+            ordersCollectionRef = collection(db, "orders");
+            menuCollectionRef = collection(db, "menu");
         } catch (error) {
             console.error("Firebase initialization failed:", error);
             showModal("Could not connect to the service. Please refresh.");
@@ -348,7 +337,10 @@
             ordersUnsubscribe = onSnapshot(q, (snapshot) => {
                 // Clear containers initially
                 Object.values(orderContainers).forEach(c => { 
-                    if(c) c.innerHTML = `<h3 class="font-bold text-lg text-slate-600 mb-2">${c.id.split('-')[0].charAt(0).toUpperCase() + c.id.split('-')[0].slice(1)}</h3>`;
+                    if(c) {
+                        const title = c.id.replace('-orders', '').replace('-', ' ');
+                        c.innerHTML = `<h3 class="font-bold text-lg text-slate-600 mb-2 capitalize">${title}</h3>`;
+                    }
                 });
 
                 snapshot.docChanges().forEach((change) => {
@@ -360,8 +352,13 @@
                     }
                 });
 
-                snapshot.docs.sort((a, b) => a.data().createdAt.seconds - b.data().createdAt.seconds)
-                             .forEach(doc => renderOrderCard({ id: doc.id, ...doc.data() }));
+                const sortedDocs = snapshot.docs.sort((a, b) => {
+                    const timeA = a.data().createdAt?.seconds || 0;
+                    const timeB = b.data().createdAt?.seconds || 0;
+                    return timeA - timeB;
+                });
+                
+                sortedDocs.forEach(doc => renderOrderCard({ id: doc.id, ...doc.data() }));
 
             }, (error) => console.error("Error listening to orders:", error));
         }
@@ -375,8 +372,12 @@
                     return;
                 }
                 recordsList.innerHTML = '';
-                snapshot.docs.sort((a, b) => b.data().createdAt.seconds - a.data().createdAt.seconds)
-                             .forEach(doc => renderRecordCard({ id: doc.id, ...doc.data() }));
+                const sortedDocs = snapshot.docs.sort((a, b) => {
+                    const timeA = a.data().createdAt?.seconds || 0;
+                    const timeB = b.data().createdAt?.seconds || 0;
+                    return timeB - timeA;
+                });
+                sortedDocs.forEach(doc => renderRecordCard({ id: doc.id, ...doc.data() }));
             });
         }
 
@@ -410,7 +411,7 @@
                 return `<li class="flex justify-between text-sm"><span>${item.quantity} x ${item.name} ${commentHtml}</span><span class="font-mono text-gray-600">฿${(item.quantity * item.price).toFixed(2)}</span></li>`;
             }).join('');
 
-            const orderTime = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+            const orderTime = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : 'N/A';
             
             card.innerHTML = `
                 <div class="flex justify-between items-start pb-2 mb-2">
@@ -425,10 +426,10 @@
                     </div>
                 </div>
                 <ul class="space-y-1 mb-4 border-t pt-2">${itemsHtml}</ul>
-                <div class="border-t pt-2 flex justify-end font-bold text-lg">Total: ฿${order.totalPrice.toFixed(2)}</div>
+                <div class="border-t pt-2 flex justify-end font-bold text-lg">Total: ฿${Number(order.totalPrice).toFixed(2)}</div>
                 <div class="flex gap-2 mt-4">
                     <button onclick="updateOrderStatus('${order.id}', '${config.nextStatus}')" class="w-full bg-${config.color}-500 text-white font-semibold py-2 rounded-lg hover:bg-${config.color}-600 transition-all">${config.nextAction}</button>
-                    <button onclick="confirmAction('Remove order for ${order.customerName}?', () => removeOrder('${order.id}'))" class="bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-lg hover:bg-red-200 transition-all">
+                    <button onclick="confirmAction('Remove order for ${order.customerName.replace(/'/g, "\\'") }?', () => removeOrder('${order.id}'))" class="bg-red-100 text-red-700 font-semibold py-2 px-4 rounded-lg hover:bg-red-200 transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
                 </div>`;
@@ -445,8 +446,8 @@
                     <h3 class="font-bold text-lg text-gray-800">${item.name}</h3>
                     <p class="text-gray-600 font-mono">฿${Number(item.price).toFixed(2)}</p>
                     <div class="mt-4 pt-4 border-t flex-grow flex items-end justify-end gap-2">
-                        <button onclick="openEditMenuItemModal('${item.id}', '${item.name}', ${item.price}, '${item.image}')" class="text-sm bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-all">Edit</button>
-                        <button onclick="confirmAction('Delete ${item.name}?', () => deleteMenuItem('${item.id}'))" class="text-sm bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all">Delete</button>
+                        <button onclick="openEditMenuItemModal('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, '${item.image}', '${item.category ? item.category.replace(/'/g, "\\'") : ''}')" class="text-sm bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-all">Edit</button>
+                        <button onclick="confirmAction('Delete ${item.name.replace(/'/g, "\\'") }?', () => deleteMenuItem('${item.id}'))" class="text-sm bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-all">Delete</button>
                     </div>
                 </div>
             `;
@@ -455,7 +456,7 @@
 
         function renderRecordCard(order) {
             const recordsList = document.getElementById('records-list');
-            const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString() : 'N/A';
+            const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('en-GB') : 'N/A';
             const itemsHtml = order.items.map(item => `<li>${item.quantity} x ${item.name}</li>`).join('');
             
             const recordEl = document.createElement('div');
@@ -469,14 +470,14 @@
                     <p class="text-sm text-gray-500">${orderDate}</p>
                 </div>
                 <ul class="list-disc list-inside text-sm my-2 ml-4">${itemsHtml}</ul>
-                <p class="text-right font-bold mt-2">Total: ฿${order.totalPrice.toFixed(2)}</p>
+                <p class="text-right font-bold mt-2">Total: ฿${Number(order.totalPrice).toFixed(2)}</p>
             `;
             recordsList.appendChild(recordEl);
         }
 
         // --- FIRESTORE ACTIONS ---
         window.updateOrderStatus = async (orderId, newStatus) => {
-            const orderRef = doc(db, `artifacts/${appId}/public/data/orders`, orderId);
+            const orderRef = doc(db, "orders", orderId); // CORRECTED
             try {
                 await updateDoc(orderRef, { status: newStatus });
             } catch (error) {
@@ -487,7 +488,7 @@
 
         window.removeOrder = async (orderId) => {
             try {
-                await deleteDoc(doc(db, `artifacts/${appId}/public/data/orders`, orderId));
+                await deleteDoc(doc(db, "orders", orderId)); // CORRECTED
                 showModal("Order removed successfully.");
             } catch (error) {
                 console.error("Error removing order: ", error);
@@ -503,9 +504,11 @@
                     showModal("No completed orders to clear.");
                     return;
                 }
-                for (const docSnapshot of querySnapshot.docs) {
-                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/orders`, docSnapshot.id));
-                }
+                const batch = [];
+                querySnapshot.docs.forEach(docSnapshot => {
+                    batch.push(deleteDoc(doc(db, "orders", docSnapshot.id))); // CORRECTED
+                });
+                await Promise.all(batch);
                 showModal(`Successfully cleared ${querySnapshot.size} completed order(s).`);
             } catch (error) {
                 console.error("Error clearing completed orders: ", error);
@@ -520,16 +523,17 @@
                 name: document.getElementById('item-name').value,
                 price: parseFloat(document.getElementById('item-price').value),
                 image: document.getElementById('item-image').value,
+                category: document.getElementById('item-category').value,
             };
 
-            if (!itemData.name || isNaN(itemData.price) || !itemData.image) {
+            if (!itemData.name || isNaN(itemData.price) || !itemData.image || !itemData.category) {
                 showModal("Please fill out all fields correctly.");
                 return;
             }
 
             try {
                 if (id) { // Editing existing item
-                    await updateDoc(doc(db, `artifacts/${appId}/public/data/menu`, id), itemData);
+                    await updateDoc(doc(db, "menu", id), itemData); // CORRECTED
                     showModal("Menu item updated successfully!");
                 } else { // Adding new item
                     await addDoc(menuCollectionRef, itemData);
@@ -544,7 +548,7 @@
 
         window.deleteMenuItem = async (id) => {
             try {
-                await deleteDoc(doc(db, `artifacts/${appId}/public/data/menu`, id));
+                await deleteDoc(doc(db, "menu", id)); // CORRECTED
                 showModal("Menu item deleted.");
             } catch (error) {
                 console.error("Error deleting menu item:", error);
@@ -570,17 +574,21 @@
             const okBtn = document.getElementById('confirm-ok-btn');
             const cancelBtn = document.getElementById('confirm-cancel-btn');
 
+            const newOkBtn = okBtn.cloneNode(true);
+            okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+            
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
             const cleanup = () => {
                 confirmModal.classList.add('hidden');
-                okBtn.replaceWith(okBtn.cloneNode(true)); // Remove event listener
-                cancelBtn.replaceWith(cancelBtn.cloneNode(true));
             };
 
-            okBtn.addEventListener('click', () => {
+            newOkBtn.addEventListener('click', () => {
                 callback();
                 cleanup();
             });
-            cancelBtn.addEventListener('click', cleanup);
+            newCancelBtn.addEventListener('click', cleanup);
         }
 
         window.openNewMenuItemModal = () => {
@@ -590,12 +598,13 @@
             menuItemModal.classList.remove('hidden');
         }
 
-        window.openEditMenuItemModal = (id, name, price, image) => {
+        window.openEditMenuItemModal = (id, name, price, image, category) => {
             menuItemForm.reset();
             menuItemIdInput.value = id;
             document.getElementById('item-name').value = name;
             document.getElementById('item-price').value = price;
             document.getElementById('item-image').value = image;
+            document.getElementById('item-category').value = category || '';
             menuItemModalTitle.textContent = 'Edit Item';
             menuItemModal.classList.remove('hidden');
         }
@@ -607,8 +616,6 @@
             }
         });
 
-        // --- INITIALIZE ---
-        // The onAuthStateChanged listener handles the initial call
     </script>
 </body>
 </html>
