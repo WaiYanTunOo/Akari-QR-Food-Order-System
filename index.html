@@ -153,10 +153,44 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // For a production app, you would set up a Scheduled Cloud Function
+        // to run daily and delete old orders from the Firestore database.
+        // This keeps your database clean and saves storage costs.
+        // Example Cloud Function (index.js):
+        /*
+        const functions = require('firebase-functions');
+        const admin = require('firebase-admin');
+        admin.initializeApp();
+
+        exports.cleanupOldOrders = functions.pubsub.schedule('every 24 hours').onRun(async (context) => {
+            const db = admin.firestore();
+            const now = admin.firestore.Timestamp.now();
+            const thirtyDaysAgo = new admin.firestore.Timestamp(now.seconds - (30 * 24 * 60 * 60), now.nanoseconds);
+
+            const oldOrdersQuery = db.collection('orders').where('createdAt', '<=', thirtyDaysAgo);
+            const snapshot = await oldOrdersQuery.get();
+
+            if (snapshot.empty) {
+                console.log('No old orders to delete.');
+                return null;
+            }
+
+            const batch = db.batch();
+            snapshot.docs.forEach(doc => {
+                batch.delete(doc.ref);
+            });
+
+            await batch.commit();
+            console.log(`Deleted ${snapshot.size} old orders.`);
+            return null;
+        });
+        */
+
+
         const firebaseConfig = typeof __firebase_config !== 'undefined' 
             ? JSON.parse(__firebase_config)
             : {
-                apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk", // This was corrected
+                apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
                 authDomain: "akari-qr-order-system.firebaseapp.com",
                 projectId: "akari-qr-order-system",
                 storageBucket: "akari-qr-order-system.appspot.com",
@@ -181,7 +215,6 @@
             showModal("Could not connect to the service. Please refresh.");
         }
 
-        // --- Hardcoded Default Menu ---  
         const defaultMenu = [  
             { id: 'mohinga', name: 'မုန့်ဟင်းခါး', price: 40, image: '/menu/mohinga.jpg', category: 'အဓိကဟင်းလျာများ' },  
             { id: 'rakhine-mont-ti', name: 'ရခိုင်မုန့်တီ', price: 30, image: '/menu/Rmot_ti_soup.jpg', category: 'အဓိကဟင်းလျာများ' },  
@@ -246,15 +279,12 @@
         }
 
         function listenForMenu() {
-            // Initially render the default menu so the user sees something immediately
             menu = [...defaultMenu];
             renderMenu();
 
             onSnapshot(menuCollectionRef, (snapshot) => {
                 const menuMap = new Map();
-                // Load default menu first
                 defaultMenu.forEach(item => menuMap.set(item.id, item));
-                // Overwrite with items from Firestore
                 snapshot.docs.forEach(doc => {
                     menuMap.set(doc.id, { id: doc.id, ...doc.data() });
                 });
@@ -341,17 +371,18 @@
             document.querySelectorAll('.customer-input').forEach(input => input.oninput = saveState);
             document.querySelectorAll('.order-type-btn').forEach(btn => {
                 btn.onclick = (e) => {
+                    const currentCart = e.target.closest('#desktop-cart-wrapper, #mobile-cart-content');
                     orderType = e.target.dataset.type;
-                    document.querySelectorAll('.order-type-btn').forEach(b => {
+                    
+                    currentCart.querySelectorAll('.order-type-btn').forEach(b => {
                         b.classList.remove('bg-indigo-100', 'text-indigo-800', 'ring-2', 'ring-indigo-500');
                         b.classList.add('bg-white', 'text-gray-700', 'border');
                     });
+                    
                     e.target.classList.add('bg-indigo-100', 'text-indigo-800', 'ring-2', 'ring-indigo-500');
                     e.target.classList.remove('bg-white', 'text-gray-700', 'border');
                     
-                    document.querySelectorAll('.delivery-field').forEach(field => {
-                        field.classList.toggle('hidden', orderType !== 'Delivery');
-                    });
+                    currentCart.querySelector('.delivery-field').classList.toggle('hidden', orderType !== 'Delivery');
                     saveState();
                 };
             });
@@ -392,15 +423,26 @@
             const mobileCartCount = document.getElementById('mobile-cart-count');
             mobileCartCount.textContent = cartCount;
             mobileCartCount.classList.toggle('hidden', cartCount === 0);
-            mobileCartFab.classList.toggle('hidden', cartCount === 0 && !mobileCartModal.classList.contains('hidden'));
+            mobileCartFab.classList.toggle('hidden', cartCount === 0 && mobileCartModal.classList.contains('hidden'));
 
             saveState();
         }
 
+        // NEW: Clears only the cart items, keeping customer info for the next order.
+        function prepareForNewOrder() {
+            cart = [];
+            renderCart(); // This will re-render the empty cart and save the state (with empty cart but existing customer info)
+        }
+
         window.placeOrder = async () => {
-            const customerNameInput = document.querySelector('#desktop-cart-wrapper #customer-name') || document.querySelector('#mobile-cart-content #customer-name');
-            const customerPhoneInput = document.querySelector('#desktop-cart-wrapper #customer-phone') || document.querySelector('#mobile-cart-content #customer-phone');
-            const customerAddressInput = document.querySelector('#desktop-cart-wrapper #customer-address') || document.querySelector('#mobile-cart-content #customer-address');
+            const isMobileCartVisible = !document.getElementById('mobile-cart-modal').classList.contains('hidden');
+            const activeCartElement = isMobileCartVisible 
+                ? document.getElementById('mobile-cart-content') 
+                : document.getElementById('desktop-cart-wrapper');
+
+            const customerNameInput = activeCartElement.querySelector('#customer-name');
+            const customerPhoneInput = activeCartElement.querySelector('#customer-phone');
+            const customerAddressInput = activeCartElement.querySelector('#customer-address');
             
             const customerName = customerNameInput.value.trim();
 
@@ -435,31 +477,49 @@
                 const docRef = await addDoc(ordersCollectionRef, order);
                 showModal("အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်!");
                 
-                let activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
-                activeOrderIds.push(docRef.id);
-                localStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
+                // NEW: Store order with a client-side timestamp for auto-cleanup
+                let customerOrders = JSON.parse(localStorage.getItem('customerActiveOrders')) || [];
+                customerOrders.push({ id: docRef.id, placedAt: Date.now() });
+                localStorage.setItem('customerActiveOrders', JSON.stringify(customerOrders));
                 
-                cart = [];
-                renderCart();
+                prepareForNewOrder(); // Replaces reset function
                 listenForAllActiveOrders();
                 toggleMobileCart(false);
             } catch (error) {
                 console.error("Error placing order: ", error);
                 showModal("အော်ဒါတင်ရာတွင် အမှားအယွင်း ဖြစ်ပွားပါသည်။");
             } finally {
-                placeOrderBtns.forEach(btn => {
-                    btn.disabled = false;
+                document.querySelectorAll('#place-order-btn').forEach(btn => {
+                    btn.disabled = cart.length === 0;
                     btn.textContent = 'အော်ဒါတင်မည်';
                 });
             }
         };
         
         function listenForAllActiveOrders() {
-            const activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
+            // NEW: Auto-cleanup logic for orders older than 24 hours
+            let customerOrders = JSON.parse(localStorage.getItem('customerActiveOrders')) || [];
+            const now = Date.now();
+            const oneDayInMs = 24 * 60 * 60 * 1000;
+            
+            const recentOrders = customerOrders.filter(order => (now - order.placedAt) < oneDayInMs);
+
+            if (recentOrders.length < customerOrders.length) {
+                localStorage.setItem('customerActiveOrders', JSON.stringify(recentOrders));
+            }
+            
             activeOrdersContainer.innerHTML = '';
-            activeOrderIds.forEach(orderId => {
-                if (!activeOrderListeners[orderId]) {
-                    listenForSingleOrderStatus(orderId);
+            // Unsubscribe from any listeners that are no longer in the recent list
+            for (const orderId in activeOrderListeners) {
+                if (!recentOrders.some(o => o.id === orderId)) {
+                    activeOrderListeners[orderId](); // Unsubscribe
+                    delete activeOrderListeners[orderId];
+                }
+            }
+
+            recentOrders.forEach(order => {
+                if (!activeOrderListeners[order.id]) {
+                    listenForSingleOrderStatus(order.id);
                 }
             });
         }
@@ -470,7 +530,7 @@
                 if (doc.exists()) {
                     const orderData = doc.data();
                     if (auth.currentUser && orderData.creatorUid === auth.currentUser.uid) {
-                        if (orderData.status === 'Completed') {
+                        if (orderData.status === 'Completed' || orderData.status === 'Cancelled') {
                             removeActiveOrder(orderId);
                         } else {
                             renderOrUpdateStatusBox(orderId, orderData);
@@ -482,6 +542,7 @@
             });
         }
 
+        // NEW: Updated to show full order details
         function renderOrUpdateStatusBox(orderId, orderData) {
             let statusBox = document.getElementById(`status-box-${orderId}`);
             if (!statusBox) {
@@ -498,9 +559,26 @@
                 'Ready': { text: 'အသင့်ဖြစ်ပါပြီ!', color: 'text-green-500' }
             }[status] || { text: status, color: 'text-gray-700' };
             
+            // Generate HTML for the list of items
+            const itemsHtml = orderData.items.map(item => `
+                <li class="flex justify-between text-sm">
+                    <span>${item.name} <span class="text-gray-500">x ${item.quantity}</span></span>
+                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                </li>
+            `).join('');
+
             statusBox.innerHTML = `
-                <p class="font-semibold text-gray-700">${orderData.customerName} ၏ အော်ဒါ</p>
-                <p class="font-bold text-xl ${statusDisplay.color}">${statusDisplay.text}</p>
+                <div class="flex justify-between items-center">
+                    <p class="font-semibold text-gray-700">${orderData.customerName} ၏ အော်ဒါ</p>
+                    <p class="font-bold text-lg ${statusDisplay.color}">${statusDisplay.text}</p>
+                </div>
+                <div class="border-t mt-3 pt-3 space-y-2">
+                    <ul class="space-y-1 text-gray-800">${itemsHtml}</ul>
+                    <div class="border-t pt-2 mt-2 flex justify-between font-bold">
+                        <span>စုစုပေါင်း:</span>
+                        <span>฿${orderData.totalPrice.toFixed(2)}</span>
+                    </div>
+                </div>
             `;
         }
 
@@ -512,21 +590,26 @@
             const statusBox = document.getElementById(`status-box-${orderId}`);
             if (statusBox) statusBox.remove();
             
-            let activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
-            activeOrderIds = activeOrderIds.filter(id => id !== orderId);
-            localStorage.setItem('activeOrderIds', JSON.stringify(activeOrderIds));
+            // NEW: Update the stored array of order objects
+            let customerOrders = JSON.parse(localStorage.getItem('customerActiveOrders')) || [];
+            customerOrders = customerOrders.filter(order => order.id !== orderId);
+            localStorage.setItem('customerActiveOrders', JSON.stringify(customerOrders));
         }
 
         function saveState() {
-            const customerNameInput = document.querySelector('#desktop-cart-wrapper #customer-name') || document.querySelector('#mobile-cart-content #customer-name');
-            if (!customerNameInput) return;
+             const isMobileCartVisible = !document.getElementById('mobile-cart-modal').classList.contains('hidden');
+            const activeCartElement = isMobileCartVisible 
+                ? document.getElementById('mobile-cart-content') 
+                : document.getElementById('desktop-cart-wrapper');
+
+            if (!activeCartElement.querySelector('#customer-name')) return;
 
             const state = {
-                cart: cart,
+                cart: cart, // Cart will be empty after an order, but info is kept
                 orderType: orderType,
-                customerName: customerNameInput.value,
-                customerPhone: (document.querySelector('#desktop-cart-wrapper #customer-phone') || document.querySelector('#mobile-cart-content #customer-phone')).value,
-                customerAddress: (document.querySelector('#desktop-cart-wrapper #customer-address') || document.querySelector('#mobile-cart-content #customer-address')).value,
+                customerName: activeCartElement.querySelector('#customer-name').value,
+                customerPhone: activeCartElement.querySelector('#customer-phone').value,
+                customerAddress: activeCartElement.querySelector('#customer-address').value,
             };
             localStorage.setItem('customerState', JSON.stringify(state));
         }
@@ -542,8 +625,11 @@
                 document.querySelectorAll('#customer-address').forEach(i => i.value = state.customerAddress || '');
 
                 document.querySelectorAll('.order-type-btn').forEach(btn => {
-                    if (btn.dataset.type === orderType) {
-                        btn.click();
+                    const container = btn.closest('#desktop-cart-wrapper, #mobile-cart-content');
+                    if (container && btn.dataset.type === orderType) {
+                       // Find the specific button in each cart and click it
+                       const correctBtn = container.querySelector(`.order-type-btn[data-type="${orderType}"]`);
+                       if(correctBtn) correctBtn.click();
                     }
                 });
             }
@@ -555,7 +641,9 @@
                 mobileCartFab.classList.add('hidden');
             } else {
                 mobileCartModal.classList.add('hidden');
-                mobileCartFab.classList.remove('hidden');
+                if (cart.length > 0) {
+                   mobileCartFab.classList.remove('hidden');
+                }
             }
         }
 
