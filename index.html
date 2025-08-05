@@ -32,7 +32,6 @@
         .slide-in-up-animation {
             animation: slideInUp 0.4s ease-out forwards;
         }
-        /* Custom scrollbar for webkit browsers */
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
         }
@@ -46,13 +45,12 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #64748b;
         }
-        /* Hide scrollbar for cart items but still allow scroll */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
         .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
@@ -71,26 +69,21 @@
                 </div>
             </header>
 
-            <!-- Active Orders Display -->
             <div id="active-orders-container" class="space-y-4 mb-6"></div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Menu Items -->
                 <div id="menu-items" class="lg:col-span-7 space-y-8">
                     <p id="menu-loading-msg" class="col-span-full text-center text-gray-500 py-10">မီနူးကို ဖွင့်နေသည်...</p>
                 </div>
 
-                <!-- Desktop Cart -->
                 <div class="lg:col-span-5 hidden lg:block">
                     <div id="desktop-cart-wrapper" class="bg-white rounded-xl shadow-lg p-6 sticky top-8">
-                        <!-- Cart content will be injected here -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Mobile Floating Cart Button -->
     <div id="mobile-cart-fab" class="lg:hidden fixed bottom-6 right-6 z-30">
         <button onclick="toggleMobileCart(true)" class="bg-indigo-600 text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -98,14 +91,11 @@
         </button>
     </div>
 
-    <!-- Mobile Cart Modal -->
     <div id="mobile-cart-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40">
         <div id="mobile-cart-content" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl h-[90vh] slide-in-up-animation flex flex-col">
-            <!-- Cart content will be injected here -->
         </div>
     </div>
     
-    <!-- Shared Cart HTML Template -->
     <template id="cart-template">
         <div class="flex flex-col h-full">
             <div class="flex justify-between items-center p-4 border-b">
@@ -151,7 +141,6 @@
         </div>
     </template>
 
-    <!-- Generic Message Modal -->
     <div id="message-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center fade-in-animation">
             <p id="modal-message" class="text-lg mb-6"></p>
@@ -160,21 +149,21 @@
     </div>
 
     <script type="module">
-        // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, setLogLevel, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- CONFIGURATION & INITIALIZATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
-            authDomain: "akari-qr-order-system.firebaseapp.com",
-            projectId: "akari-qr-order-system",
-            storageBucket: "akari-qr-order-system.appspot.com",
-            messagingSenderId: "646414842831",
-            appId: "1:646414842831:web:0b76fc26030ba",
-            measurementId: "G-VWBWZ2NHK9"
-        };
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "YOUR_FALLBACK_API_KEY", // This is a placeholder
+                authDomain: "akari-qr-order-system.firebaseapp.com",
+                projectId: "akari-qr-order-system",
+                storageBucket: "akari-qr-order-system.appspot.com",
+                messagingSenderId: "646414842831",
+                appId: "1:646414842831:web:0b76fc26030ba"
+              };
+
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         let app, auth, db;
@@ -187,20 +176,18 @@
             db = getFirestore(app);
             setLogLevel('debug'); 
 
-            ordersCollectionRef = collection(db, `artifacts/${appId}/public/data/orders`);
-            menuCollectionRef = collection(db, `artifacts/${appId}/public/data/menu`);
+            ordersCollectionRef = collection(db, `orders`);
+            menuCollectionRef = collection(db, `menu`);
         } catch (error) {
             console.error("Firebase initialization failed:", error);
             showModal("Could not connect to the service. Please refresh.");
         }
 
-        // --- STATE ---
         let menu = [];
         let cart = [];
         let orderType = 'Dine-in';
         const categoryOrder = ['အဓိကဟင်းလျာများ', 'အသုပ်များ', 'အဆာသွတ်များ', 'အပိုထပ်ထည့်စရာများ', 'အအေးများ'];
 
-        // --- DOM ELEMENTS ---
         const menuItemsContainer = document.getElementById('menu-items');
         const menuLoadingMsg = document.getElementById('menu-loading-msg');
         const activeOrdersContainer = document.getElementById('active-orders-container');
@@ -209,7 +196,6 @@
         const desktopCartWrapper = document.getElementById('desktop-cart-wrapper');
         const mobileCartContent = document.getElementById('mobile-cart-content');
 
-        // --- AUTH & APP INIT ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 initApp();
@@ -221,32 +207,32 @@
                         await signInAnonymously(auth);
                     }
                 } catch (error) {
-                    console.error("Authentication failed:", error);
-                    showModal("Could not connect to the ordering service.");
+                    console.error("Authentication failed:", error.code, error.message);
+                    showModal("Authentication Error. Please try again later.");
                 }
             }
         });
 
         function initApp() {
-            listenForMenu();
-            loadState();
-            listenForAllActiveOrders();
-            renderCart();
             setupCartUI();
+            loadState();
+            renderCart();
+            listenForMenu();
+            listenForAllActiveOrders();
         }
 
-        // --- MENU FUNCTIONS ---
-        function listenForMenu() {
-            onSnapshot(menuCollectionRef, (snapshot) => {
+        async function listenForMenu() {
+            try {
+                const snapshot = await getDocs(menuCollectionRef);
                 menu = [];
                 snapshot.docs.forEach(doc => {
                     menu.push({ id: doc.id, ...doc.data() });
                 });
                 renderMenu();
-            }, (error) => {
+            } catch (error) {
                 console.error("Error fetching menu:", error);
-                menuLoadingMsg.textContent = "Could not load menu. Please try again later.";
-            });
+                menuLoadingMsg.textContent = "Could not load menu. Please check your connection and try again.";
+            }
         }
 
         function renderMenu() {
@@ -286,7 +272,6 @@
             });
         }
 
-        // --- CART FUNCTIONS ---
         window.addToCart = (itemId) => {
             const menuItem = menu.find(item => item.id === itemId);
             if (!menuItem) return;
@@ -313,9 +298,11 @@
 
         function setupCartUI() {
             const cartTemplate = document.getElementById('cart-template').content.cloneNode(true);
+            desktopCartWrapper.innerHTML = '';
             desktopCartWrapper.appendChild(cartTemplate);
             
             const mobileCartTemplate = document.getElementById('cart-template').content.cloneNode(true);
+            mobileCartContent.innerHTML = '';
             mobileCartContent.appendChild(mobileCartTemplate);
 
             document.querySelectorAll('.close-cart-btn').forEach(btn => btn.onclick = () => toggleMobileCart(false));
@@ -380,7 +367,12 @@
         }
 
         window.placeOrder = async () => {
-            const customerName = document.querySelector('#desktop-cart-wrapper #customer-name').value.trim();
+            const customerNameInput = document.querySelector('#desktop-cart-wrapper #customer-name') || document.querySelector('#mobile-cart-content #customer-name');
+            const customerPhoneInput = document.querySelector('#desktop-cart-wrapper #customer-phone') || document.querySelector('#mobile-cart-content #customer-phone');
+            const customerAddressInput = document.querySelector('#desktop-cart-wrapper #customer-address') || document.querySelector('#mobile-cart-content #customer-address');
+            
+            const customerName = customerNameInput.value.trim();
+
             if (!customerName) {
                 showModal("ကျေးဇူးပြု၍ နာမည်ဖြည့်ပေးပါ။");
                 return;
@@ -398,8 +390,8 @@
 
             const order = {
                 customerName: customerName,
-                customerPhone: document.querySelector('#desktop-cart-wrapper #customer-phone').value.trim(),
-                customerAddress: document.querySelector('#desktop-cart-wrapper #customer-address').value.trim(),
+                customerPhone: customerPhoneInput.value.trim(),
+                customerAddress: customerAddressInput.value.trim(),
                 orderType: orderType,
                 items: cart.map(item => ({ name: item.name, quantity: item.quantity, price: Number(item.price) })),
                 totalPrice: cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0),
@@ -430,10 +422,9 @@
             }
         };
         
-        // --- ORDER STATUS & STATE MANAGEMENT ---
         function listenForAllActiveOrders() {
             const activeOrderIds = JSON.parse(localStorage.getItem('activeOrderIds')) || [];
-            activeOrdersContainer.innerHTML = ''; // Clear previous renders
+            activeOrdersContainer.innerHTML = '';
             activeOrderIds.forEach(orderId => {
                 if (!activeOrderListeners[orderId]) {
                     listenForSingleOrderStatus(orderId);
@@ -481,7 +472,7 @@
 
         function removeActiveOrder(orderId) {
             if (activeOrderListeners[orderId]) {
-                activeOrderListeners[orderId](); // Unsubscribe
+                activeOrderListeners[orderId]();
                 delete activeOrderListeners[orderId];
             }
             const statusBox = document.getElementById(`status-box-${orderId}`);
@@ -493,12 +484,15 @@
         }
 
         function saveState() {
+            const customerNameInput = document.querySelector('#desktop-cart-wrapper #customer-name') || document.querySelector('#mobile-cart-content #customer-name');
+            if (!customerNameInput) return;
+
             const state = {
                 cart: cart,
                 orderType: orderType,
-                customerName: document.querySelector('#desktop-cart-wrapper #customer-name').value,
-                customerPhone: document.querySelector('#desktop-cart-wrapper #customer-phone').value,
-                customerAddress: document.querySelector('#desktop-cart-wrapper #customer-address').value,
+                customerName: customerNameInput.value,
+                customerPhone: (document.querySelector('#desktop-cart-wrapper #customer-phone') || document.querySelector('#mobile-cart-content #customer-phone')).value,
+                customerAddress: (document.querySelector('#desktop-cart-wrapper #customer-address') || document.querySelector('#mobile-cart-content #customer-address')).value,
             };
             localStorage.setItem('customerState', JSON.stringify(state));
         }
@@ -521,7 +515,6 @@
             }
         }
         
-        // --- UI HELPERS ---
         window.toggleMobileCart = (show) => {
             if (show) {
                 mobileCartModal.classList.remove('hidden');
