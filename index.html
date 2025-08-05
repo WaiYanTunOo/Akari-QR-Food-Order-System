@@ -170,9 +170,9 @@
             apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
             authDomain: "akari-qr-order-system.firebaseapp.com",
             projectId: "akari-qr-order-system",
-            storageBucket: "akari-qr-order-system.firebasestorage.app",
+            storageBucket: "akari-qr-order-system.appspot.com",
             messagingSenderId: "646414842831",
-            appId: "1:646414842831:web:0b76fc2779b7afc26030ba",
+            appId: "1:646414842831:web:0b76fc26030ba",
             measurementId: "G-VWBWZ2NHK9"
         };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -220,9 +220,8 @@
                     } else {
                         await signInAnonymously(auth);
                     }
-                    // onAuthStateChanged will be triggered again with a user
                 } catch (error) {
-                    console.error("Anonymous sign-in failed:", error);
+                    console.error("Authentication failed:", error);
                     showModal("Could not connect to the ordering service.");
                 }
             }
