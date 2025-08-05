@@ -156,7 +156,7 @@
         const firebaseConfig = typeof __firebase_config !== 'undefined' 
             ? JSON.parse(__firebase_config)
             : {
-                apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk", // This is a placeholder and will not work
+                apiKey: ""AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk", // This is a placeholder
                 authDomain: "akari-qr-order-system.firebaseapp.com",
                 projectId: "akari-qr-order-system",
                 storageBucket: "akari-qr-order-system.appspot.com",
@@ -181,10 +181,36 @@
             showModal("Could not connect to the service. Please refresh.");
         }
 
+        // --- Hardcoded Default Menu ---  
+        const defaultMenu = [  
+            { id: 'mohinga', name: 'မုန့်ဟင်းခါး', price: 40, image: '/menu/mohinga.jpg', category: 'အဓိကဟင်းလျာများ' },  
+            { id: 'rakhine-mont-ti', name: 'ရခိုင်မုန့်တီ', price: 30, image: '/menu/Rmot_ti_soup.jpg', category: 'အဓိကဟင်းလျာများ' },  
+            { id: 'wheat-noodle-salad', name: 'ခေါက်ဆွဲသုပ်', price: 40, image: '/menu/wheat_noodle_salad.jpg', category: 'အသုပ်များ' },  
+            { id: 'glass-noodle-salad', name: 'ကြာဇံသုပ်', price: 40, image: '/menu/glass_noodle_salad.jpg', category: 'အသုပ်များ' },  
+            { id: 'rice-noodle-salad', name: 'မုန့်ဖတ်သုပ်', price: 40, image: '/menu/Rmot_ti.jpg', category: 'အသုပ်များ' },  
+            { id: 'mixed-salad', name: 'အစုံသုပ်', price: 40, image: '/menu/mixed_salad.jpg', category: 'အသုပ်များ' },  
+            { id: 'fish-cake-salad', name: 'ငါးဖယ်သုပ်', price: 40, image: '/menu/fish_cake_salad.jpg', category: 'အသုပ်များ' },  
+            { id: 'tofu-salad', name: 'ပဲပြားသုပ်', price: 40, image: '/menu/tofu_salad.jpg', category: 'အသုပ်များ' },  
+            { id: 'papaya-salad-slide', name: 'သင်္ဘောသီးအပြားသုပ်', price: 40, image: '/menu/papaya_slide.jpg', category: 'အသုပ်များ' },  
+            { id: 'papaya-salad', name: 'သင်္ဘောသီးသုပ်', price: 40, image: '/menu/papaya.jpg', category: 'အသုပ်များ' },  
+            { id: 'stuffed-tofu', name: 'ပဲပြားအဆာသွတ်', price: 40, image: '/menu/stuffed_tofu.jpg', category: 'အဆာသွတ်များ' },  
+            { id: 'stuffed-fish-cake', name: 'ငါးဖယ်အဆာသွတ်', price: 40, image: '/menu/stuffed_fish_cake.jpg', category: 'အဆာသွတ်များ' },  
+            { id: 'pea-fritters', name: 'ပဲကြော်', price: 10, image: '/menu/pea_fritters.jpg', isAddon: true, category: 'အပိုထပ်ထည့်စရာများ' },  
+            { id: 'fish-cake', name: 'ငါးဖယ်', price: 10, image: '/menu/fish_cake.jpg', isAddon: true, category: 'အပိုထပ်ထည့်စရာများ' },  
+            { id: 'century-egg', name: 'အိုးဘဲဥ', price: 15, image: '/menu/century_egg.jpg', isAddon: true, category: 'အပိုထပ်ထည့်စရာများ' },  
+            { id: 'shark', name: 'Shark', price: 30, image: '/menu/shark_drink.jpg', category: 'အအေးများ' },  
+            { id: 'kyaw-sein', name: 'ကျွဲစိမ်း', price: 30, image: '/menu/kyaw_sein_drink.jpg', category: 'အအေးများ' },  
+            { id: 'speed', name: 'Speed', price: 20, image: '/menu/speed_drink.jpg', category: 'အအေးများ' },  
+            { id: 'veve', name: 'VeVe', price: 20, image: '/menu/veve_drink.jpg', category: 'အအေးများ' },  
+            { id: 'rocker', name: 'Rocker', price: 20, image: '/menu/rocker_drink.jpg', category: 'အအေးများ' },  
+            { id: 'water', name: 'ရေသန့်', price: 5, image: '/menu/water.jpg', category: 'အအေးများ' },  
+        ];  
+        
+        const categoryOrder = ['အဓိကဟင်းလျာများ', 'အသုပ်များ', 'အဆာသွတ်များ', 'အပိုထပ်ထည့်စရာများ', 'အအေးများ'];  
+
         let menu = [];
         let cart = [];
         let orderType = 'Dine-in';
-        const categoryOrder = ['အဓိကဟင်းလျာများ', 'အသုပ်များ', 'အဆာသွတ်များ', 'အပိုထပ်ထည့်စရာများ', 'အအေးများ'];
 
         const menuItemsContainer = document.getElementById('menu-items');
         const menuLoadingMsg = document.getElementById('menu-loading-msg');
@@ -220,15 +246,23 @@
         }
 
         function listenForMenu() {
+            // Initially render the default menu so the user sees something immediately
+            menu = [...defaultMenu];
+            renderMenu();
+
             onSnapshot(menuCollectionRef, (snapshot) => {
-                menu = [];
+                const menuMap = new Map();
+                // Load default menu first
+                defaultMenu.forEach(item => menuMap.set(item.id, item));
+                // Overwrite with items from Firestore
                 snapshot.docs.forEach(doc => {
-                    menu.push({ id: doc.id, ...doc.data() });
+                    menuMap.set(doc.id, { id: doc.id, ...doc.data() });
                 });
+                menu = Array.from(menuMap.values());
                 renderMenu();
             }, (error) => {
-                console.error("Error fetching menu:", error);
-                menuLoadingMsg.textContent = "Could not load menu. Please check your connection and try again.";
+                console.error("Error fetching menu from Firestore:", error);
+                menuLoadingMsg.textContent = "Could not load latest menu. Showing default items.";
             });
         }
 
@@ -394,7 +428,7 @@
                 totalPrice: cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0),
                 status: 'Pending',
                 createdAt: serverTimestamp(),
-                creatorUid: auth.currentUser ? auth.currentUser.uid : null // Add creator's UID
+                creatorUid: auth.currentUser ? auth.currentUser.uid : null
             };
 
             try {
