@@ -200,14 +200,14 @@
         import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, updateDoc, setLogLevel, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- CONFIGURATION & INITIALIZATION ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-             // Fallback config if globals are not available
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+         const firebaseConfig = {
+            apiKey: "AIzaSyC6xVXYg01N67cIo_vDQANhnEmkz-LSGfk",
+            authDomain: "akari-qr-order-system.firebaseapp.com",
+            projectId: "akari-qr-order-system",
+            storageBucket: "akari-qr-order-system.firebasestorage.app",
+            messagingSenderId: "646414842831",
+            appId: "1:646414842831:web:0b76fc2779b7afc26030ba",
+            measurementId: "G-VWBWZ2NHK9"
         };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
